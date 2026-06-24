@@ -6,7 +6,7 @@ import time
 from dataclasses import dataclass
 
 from . import ledger
-from .transport import get_header
+from .transport import get_header, http_post as _default_http_post
 
 # Max network attempts for retryable statuses (429 / 5xx).
 _MAX_BACKOFF_ATTEMPTS = 3
@@ -39,7 +39,7 @@ def _backoff_seconds(resp, attempt: int) -> float:
     return _BACKOFF_BASE * (2 ** (attempt - 1))
 
 
-def send(record, config, token_provider, logger, http_post, sleep=time.sleep) -> SendOutcome:
+def send(record, config, token_provider, logger, http_post=_default_http_post, sleep=time.sleep) -> SendOutcome:
     """Send one record to ``POST {base_url}/ingest`` and classify the outcome."""
     # Client-side size guard — mirror the server's 1 MB cap before sending.
     if record.size > config.max_bytes:

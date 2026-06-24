@@ -186,6 +186,42 @@ class TestCli(CliTestBase):
         finally:
             ledger.release_lock(fd, os.path.join(self.logs, ".lock"))
 
+    # Regression: the default Deps.send (real sender.send) must be callable
+    # with exactly the arguments cli.run passes. sender.send previously made
+    # http_post a required positional that cli never supplied, so every real
+    # run raised TypeError before any HTTP call. Exercise the full wiring
+    # (cli -> real sender.send -> transport.http_post) with urlopen faked.
+    def test_default_send_path_wires_through(self):
+        import urllib.request
+        from unittest import mock
+
+        write(self.sources, "fellow/2026-06-20/A.md")
+
+        class FakeResp:
+            status = 202
+            headers = {"content-type": "application/json"}
+
+            def read(self):
+                return b'{"job_id": "job-1", "content_hash": "abc"}'
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        # NOTE: `send` is intentionally NOT overridden, so the real
+        # sender.send default is used.
+        deps = cli.Deps(
+            load_config=lambda path: self.config,
+            make_token_provider=lambda cfg: FakeTokenProvider(),
+            now=lambda: datetime(2026, 6, 20, 9, 0, 0),
+        )
+        with mock.patch.object(urllib.request, "urlopen", return_value=FakeResp()):
+            code, summary = cli.run([], deps=deps, return_summary=True)
+        self.assertEqual(code, 0)
+        self.assertEqual(summary["sent"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
