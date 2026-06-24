@@ -16,8 +16,21 @@ which gbrain        # should resolve to ~/.bun/bin/gbrain → this repo
 
 ```
 export OPENAI_API_KEY="sk-proj-your-key-here"
+export ANTHROPIC_API_KEY="sk-proj-your-key-here"
 gbrain init --supabase
 [[PASTE THE SUPABASE CONNECTION STRING]]
 gbrain doctor
 ```
 
+````
+gbrain sources add shared --path "$PWD" --name "Sierra shared wiki"
+gbrain sync --all
+gbrain embed --stale
+```
+
+```
+gbrain sources status  # shows the source + page count + sync time
+gbrain stats  # page / chunk / embedding counts
+gbrain doctor   
+gbrain think "what's the latest with acme-co?"
+```
