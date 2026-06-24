@@ -8,4 +8,6 @@ These are the main sources of context:
 
 - [GBrain Readme file - static content from fork](./gbrain/README.md)
 - [GBrain docs - static content from fork](./gbrain/docs/)
+- [GBrain docs - Company brain setup (multiplayer)](./gbrain/docs/tutorials/company-brain.md) 
+
 - [This project's docs - dynamic](./docs/)

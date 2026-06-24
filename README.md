@@ -1,2 +1,3 @@
-# dido
-LLM-wiki conflict resolution orchestrator
+# DiDO
+
+Sierra's company brain.
