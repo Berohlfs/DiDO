@@ -1,3 +1,15 @@
 .env
 .env.*
 !.env.example
+
+# ingest CLI (source-mock/)
+source-mock/.ingest-logs/
+# Real Fellow/Cowork files are private (transcripts, AI sessions) — never commit.
+source-mock/sources/**
+!source-mock/sources/
+!source-mock/sources/*/
+!source-mock/sources/**/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
