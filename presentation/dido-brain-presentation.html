@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DiDO — The Org Brain</title>
+<title>DiDO · The Org Brain</title>
 <style>
   :root{
     --ink:#04060f;
@@ -167,7 +167,7 @@
     font-size:clamp(13px,1.25vw,17px);margin-bottom:.22em;letter-spacing:.01em}
   .q .qt span{font-weight:300;color:#9fb8d4;font-size:clamp(11px,1.05vw,14px);line-height:1.45}
 
-  /* title page — original dido-brain.html overlay */
+  /* title page - original dido-brain.html overlay */
   .t0{position:absolute;inset:0;display:flex;flex-direction:column;
     justify-content:space-between;padding:5.4vh 4.4vw;pointer-events:none}
   .t0-top{display:flex;justify-content:space-between;align-items:flex-start}
@@ -205,6 +205,171 @@
     .gmock{display:none}
     .vp{flex-direction:column}
   }
+
+  /* ============ 00 · SLOP-INFILTRATION GAG ============ */
+  .gag{position:absolute;inset:0;overflow:hidden}
+  .gag .ghead{position:absolute;top:7vh;left:0;right:0;text-align:center;padding:0 6vw;z-index:7}
+  .gag-eyebrow{font-weight:300;letter-spacing:.42em;font-size:clamp(9px,.95vw,12px);
+    text-transform:uppercase;color:#9bd44a;margin-bottom:1.1em}
+  .gag-eyebrow .pip{display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:#9bd44a;box-shadow:0 0 10px #9bd44a;margin-right:1em;vertical-align:middle}
+  h1.gag-title{font-weight:200;letter-spacing:.02em;line-height:1.02;
+    font-size:clamp(34px,5.6vw,78px);
+    background:linear-gradient(96deg,#dff4ff 0%,#a8c8ff 42%,#9b8cff 72%,#ffd9a0 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 60px rgba(123,150,255,.18)}
+  h1.gag-title em{font-style:normal;color:transparent;
+    background:linear-gradient(96deg,#c4e85a,#6c8a1f);
+    -webkit-background-clip:text;background-clip:text}
+
+  /* the real-photo slop bro (left) */
+  .bro{position:absolute;left:1vw;bottom:-2vh;width:min(30vw,400px);z-index:6;
+    transform-origin:50% 100%;animation:broLean 3.6s ease-in-out infinite;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55))}
+  .bro svg,.bro-photo{width:100%;height:auto;display:block}
+  @keyframes broLean{
+    0%,26%{transform:translateX(0) rotate(0)}
+    42%{transform:translateX(1.4vw) rotate(2deg)}      /* the shove */
+    52%{transform:translateX(-1.3vw) rotate(-4deg)}    /* knocked back by the block */
+    66%{transform:translateX(.3vw) rotate(-1deg)}
+    100%{transform:translateX(0) rotate(0)}
+  }
+
+  /* 3 blue-man-group blockers guarding the brain (right) */
+  .bluemen{position:absolute;right:2.5vw;bottom:-1vh;width:min(47vw,640px);z-index:3;
+    filter:drop-shadow(0 16px 26px rgba(0,0,0,.5));
+    animation:bmBrace 3.6s ease-in-out infinite}
+  .bluemen svg{width:100%;height:auto;display:block}
+  @keyframes bmBrace{           /* brace + shove-back on impact */
+    0%,46%{transform:translateX(0)}
+    54%{transform:translateX(1.1vw)}
+    68%{transform:translateX(0)}
+    100%{transform:translateX(0)}
+  }
+
+  /* energy barrier the blue men throw up */
+  .shield{position:absolute;right:33vw;top:50%;height:44vh;z-index:4;opacity:.18;
+    transform:translateY(-50%);
+    filter:drop-shadow(0 0 18px rgba(126,246,255,.75));
+    animation:shieldPulse 3.6s ease-in-out infinite}
+  .shield svg{height:100%;width:auto;display:block}
+  @keyframes shieldPulse{
+    0%,40%{opacity:.15;transform:translateY(-50%) scale(.97)}
+    49%{opacity:.34;transform:translateY(-50%) scale(1)}
+    53%{opacity:1;transform:translateY(-50%) scale(1.07)}   /* impact flash */
+    62%{opacity:.42;transform:translateY(-50%) scale(1)}
+    100%{opacity:.15;transform:translateY(-50%) scale(.97)}
+  }
+
+  /* the slop blob, slung and blocked */
+  .slop{position:absolute;left:29vw;top:50%;width:min(12vw,130px);z-index:5;
+    margin-top:-2vh;animation:slopSling 3.6s ease-in-out infinite}
+  .slop svg{width:100%;height:auto;display:block}
+  @keyframes slopSling{
+    0%,18%{transform:translate(0,0) scale(.4) rotate(0);opacity:0}
+    26%{opacity:1}
+    30%{transform:translate(0,0) scale(.9) rotate(40deg)}
+    48%{transform:translate(24vw,-1vh) scale(1) rotate(180deg)}        /* nearing barrier */
+    54%{transform:translate(28vw,0) scaleX(.55) scaleY(1.3) rotate(210deg)} /* squash on block */
+    70%{transform:translate(6vw,3vh) scale(.85) rotate(330deg)}        /* recoil */
+    86%{transform:translate(10vw,1vh) scale(.8) rotate(360deg);opacity:.85}
+    100%{transform:translate(0,0) scale(.4) rotate(380deg);opacity:0}
+  }
+
+  /* splatter burst at the point of impact */
+  .burst{position:absolute;left:51vw;top:50%;width:13vw;z-index:5;
+    transform:translateY(-50%);opacity:0;animation:burst 3.6s ease-in-out infinite}
+  .burst svg{width:100%;height:auto;display:block}
+  @keyframes burst{
+    0%,49%{opacity:0;transform:translateY(-50%) scale(.3)}
+    54%{opacity:.95;transform:translateY(-50%) scale(1)}
+    68%{opacity:0;transform:translateY(-50%) scale(1.45)}
+    100%{opacity:0}
+  }
+
+  .gag-hint{position:absolute;bottom:5vh;left:0;right:0;text-align:center;z-index:7;
+    font-weight:300;letter-spacing:.34em;text-transform:uppercase;
+    font-size:clamp(9px,.95vw,12px);color:#6f8fb6;
+    animation:hintPulse 2.6s ease-in-out infinite}
+  .gag-hint b{color:#bfe6ff;font-weight:400}
+  @keyframes hintPulse{0%,100%{opacity:.35}50%{opacity:.9}}
+
+  @media (max-width:760px){
+    .bro{width:50vw}
+    .slop{width:18vw}
+    .bluemen{width:62vw}
+    .shield{right:22vw;height:36vh}
+  }
+
+  /* ============ DEEP-DIVE TECHNICAL SLIDES ============ */
+  code{font-family:ui-monospace,Menlo,monospace;font-size:.84em;color:#7ef6ff;
+    background:rgba(126,246,255,.09);padding:.06em .38em;border-radius:4px;letter-spacing:0}
+  .dd-title{position:absolute;top:8.5vh;left:50%;transform:translateX(-50%);
+    text-align:center;width:min(86vw,1080px)}
+  .dd-lede{font-weight:300;color:#cde0f4;font-size:clamp(13px,1.32vw,19px);
+    line-height:1.55;max-width:44em;margin:1.05em auto 0;opacity:.9}
+
+  /* clickable flow stages on the How-it-flows slide */
+  .stage.nav{pointer-events:auto;cursor:pointer}
+  .stage.nav .box{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+  .stage.nav:hover .box{transform:translateY(-6px);border-color:rgba(126,246,255,.6);
+    box-shadow:0 0 30px rgba(126,246,255,.28),0 16px 40px rgba(0,0,0,.45)}
+  .stage .explore{display:block;margin-top:.5em;font-size:8px;letter-spacing:.18em;
+    text-transform:uppercase;color:#7ef6ff;opacity:0;transition:opacity .25s ease}
+  .stage.nav:hover .explore{opacity:.92}
+  .flow-hint{position:absolute;left:0;right:0;top:88vh;text-align:center;
+    font-weight:300;letter-spacing:.26em;text-transform:uppercase;
+    font-size:clamp(9px,.85vw,11px);color:#5f7aa0}
+  .flow-hint b{color:#7ef6ff;font-weight:400}
+  .flow-hint code{text-transform:none;letter-spacing:0}
+
+  /* slide A - data pipeline lanes */
+  .lanes{position:absolute;left:0;right:0;top:37vh;margin:0 auto;
+    width:min(80vw,940px);display:flex;flex-direction:column;gap:2.2vh}
+  .lane{display:grid;grid-template-columns:clamp(108px,11vw,150px) minmax(80px,1fr) clamp(196px,23vw,300px);
+    align-items:center;gap:1vw;background:rgba(10,16,34,.42);
+    border:1px solid rgba(126,246,255,.15);border-radius:16px;padding:1.1em 1.3em;
+    backdrop-filter:blur(6px)}
+  .lane .src{text-align:center;min-width:0}
+  .lane .src b{display:block;color:#eaf3ff;font-weight:600;font-size:clamp(14px,1.35vw,19px)}
+  .lane .src span{font-weight:300;color:#8fb0d0;font-size:clamp(9px,.82vw,11px);letter-spacing:.04em}
+  .lane .conn{position:relative;text-align:center;min-width:0}
+  .lane .conn::before{content:"";position:absolute;left:0;right:0;top:50%;
+    border-top:1.6px dashed rgba(126,246,255,.4)}
+  .lane .conn::after{content:"▶";position:absolute;right:-2px;top:50%;transform:translateY(-52%);
+    color:#7ef6ff;font-size:12px}
+  .lane .conn span{position:relative;display:inline-block;font-family:ui-monospace,Menlo,monospace;
+    font-size:clamp(10px,1.02vw,13px);color:#7ef6ff;background:rgba(8,12,28,.92);
+    border:1px solid rgba(126,246,255,.22);border-radius:9px;padding:.45em .85em}
+  .lane .dst{background:linear-gradient(160deg,rgba(46,38,20,.5),rgba(20,16,8,.5));
+    border:1px solid rgba(255,217,160,.5);border-radius:13px;padding:.9em 1.1em;
+    box-shadow:0 0 24px rgba(255,217,160,.16)}
+  .lane .dst b{display:block;color:#ffe6c2;font-weight:500;font-family:ui-monospace,Menlo,monospace;
+    font-size:clamp(12px,1.12vw,15px);margin-bottom:.35em}
+  .lane .dst span{display:block;color:#cdb98f;font-weight:300;font-size:clamp(10px,.85vw,12px);line-height:1.45}
+
+  /* slide B - sync line */
+  .syncline{position:absolute;left:50%;top:75vh;transform:translateX(-50%);text-align:center;
+    width:min(86vw,1040px);font-family:ui-monospace,Menlo,monospace;
+    font-size:clamp(10px,1.02vw,14px);color:#9b8cff;letter-spacing:.03em;line-height:2}
+  .syncline b{color:#bfe6ff}
+
+  /* slide C - loop note */
+  .loopnote{position:absolute;left:0;right:0;top:80vh;text-align:center;font-weight:300;
+    color:#bdd6ee;font-size:clamp(11px,1.05vw,15px);padding:0 6vw}
+  .loopnote b{color:#7ef6ff;font-weight:400}
+
+  /* slide A - hackathon accomplishment badge */
+  .dd-result{position:absolute;left:0;right:0;top:80vh;text-align:center;
+    font-weight:300;letter-spacing:.16em;text-transform:uppercase;
+    font-size:clamp(10px,1vw,13px);color:#cdb98f}
+  .dd-result b{color:#ffe6c2;font-weight:600;font-size:1.55em;letter-spacing:0;
+    text-shadow:0 0 22px rgba(255,217,160,.45)}
+
+  @media (max-width:760px){
+    .lane{grid-template-columns:1fr;gap:.7em;text-align:center}
+    .lane .conn::before,.lane .conn::after{display:none}
+  }
 </style>
 </head>
 <body>
@@ -217,7 +382,225 @@
 <!-- ============ PAGES ============ -->
 <div class="pages">
 
-  <!-- 0 · TITLE / OVERVIEW (mirrors original dido-brain.html) -->
+  <!-- 0 · SLOP-INFILTRATION GAG (cold open) -->
+  <section class="page" data-i="0">
+    <div class="gag">
+
+      <div class="ghead">
+        <div class="lift gag-eyebrow"><span class="pip"></span>Live penetration test</div>
+        <h1 class="lift gag-title">Infiltrate brain<br>with <em>slop.</em></h1>
+      </div>
+
+      <!-- brain force-field shield (over the canvas brain) -->
+      <div class="shield">
+        <svg viewBox="0 0 170 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="shFill" cx="28%" cy="50%" r="75%">
+              <stop offset="0%" stop-color="rgba(126,246,255,.55)"/>
+              <stop offset="55%" stop-color="rgba(126,246,255,.18)"/>
+              <stop offset="100%" stop-color="rgba(126,246,255,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- bubble body -->
+          <path d="M132 12 Q14 170 132 328 Q166 170 132 12 Z" fill="url(#shFill)"/>
+          <!-- nested force arcs (bulging toward the incoming slop) -->
+          <path d="M130 16 Q22 170 130 324" fill="none" stroke="#bdf6ff" stroke-width="3.2" opacity=".95"/>
+          <path d="M140 30 Q44 170 140 310" fill="none" stroke="#7ef6ff" stroke-width="2.2" opacity=".7"/>
+          <path d="M118 40 Q30 170 118 300" fill="none" stroke="#9b8cff" stroke-width="2" opacity=".6"/>
+          <!-- hex nodes riding the front arc -->
+          <g fill="#dffaff">
+            <circle cx="60" cy="120" r="3.4"/><circle cx="40" cy="170" r="4"/>
+            <circle cx="60" cy="220" r="3.4"/><circle cx="92" cy="80" r="2.8"/>
+            <circle cx="92" cy="260" r="2.8"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 3 blue-man-group blockers guarding the brain -->
+      <div class="bluemen">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="blueSkin" cx="42%" cy="32%" r="78%">
+              <stop offset="0%" stop-color="#4f9bf2"/>
+              <stop offset="58%" stop-color="#2f74de"/>
+              <stop offset="100%" stop-color="#163f93"/>
+            </radialGradient>
+            <g id="blueman">
+              <!-- torso: black turtleneck -->
+              <path d="M40 400 L40 220 Q40 156 90 156 Q140 156 140 220 L140 400 Z" fill="#0d0d16"/>
+              <circle cx="48" cy="172" r="27" fill="#0d0d16"/>
+              <circle cx="132" cy="172" r="27" fill="#0d0d16"/>
+              <!-- raised arms (black sleeves) -->
+              <line x1="52" y1="176" x2="36" y2="96" stroke="#0d0d16" stroke-width="31" stroke-linecap="round"/>
+              <line x1="128" y1="176" x2="144" y2="96" stroke="#0d0d16" stroke-width="31" stroke-linecap="round"/>
+              <!-- blue palms-forward 'stop' hands -->
+              <g fill="url(#blueSkin)" stroke="#11357f" stroke-width="1.6">
+                <ellipse cx="34" cy="76" rx="16" ry="20"/>
+                <ellipse cx="146" cy="76" rx="16" ry="20"/>
+              </g>
+              <g stroke="#11357f" stroke-width="1.5" opacity=".55" fill="none">
+                <path d="M26 60 v16 M34 58 v18 M42 60 v16"/>
+                <path d="M138 60 v16 M146 58 v18 M154 60 v16"/>
+              </g>
+              <!-- neck -->
+              <rect x="77" y="120" width="26" height="44" rx="6" fill="url(#blueSkin)"/>
+              <!-- bald blue head -->
+              <ellipse cx="90" cy="80" rx="41" ry="47" fill="url(#blueSkin)" stroke="#11357f" stroke-width="1.6"/>
+              <ellipse cx="74" cy="56" rx="15" ry="20" fill="#9fcaff" opacity=".4"/>
+              <ellipse cx="49" cy="84" rx="7" ry="11" fill="url(#blueSkin)"/>
+              <ellipse cx="131" cy="84" rx="7" ry="11" fill="url(#blueSkin)"/>
+              <!-- blank, serene face -->
+              <ellipse cx="76" cy="80" rx="6" ry="7.5" fill="#0c2350"/>
+              <ellipse cx="104" cy="80" rx="6" ry="7.5" fill="#0c2350"/>
+              <path d="M70 66 q6 -3 12 0 M98 66 q6 -3 12 0" stroke="#11357f" stroke-width="2" fill="none" opacity=".5"/>
+              <path d="M88 86 q4 6 6 0" stroke="#11357f" stroke-width="2" fill="none" opacity=".7"/>
+              <path d="M78 104 q12 4 24 0" stroke="#0c2350" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            </g>
+          </defs>
+          <!-- three of them, center one forward -->
+          <use href="#blueman" transform="translate(-6 38) scale(.9)"/>
+          <use href="#blueman" transform="translate(390 38) scale(.9)"/>
+          <use href="#blueman" transform="translate(192 6) scale(1.04)"/>
+        </svg>
+      </div>
+
+      <!-- the slop blob being slung -->
+      <div class="slop">
+        <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="slopG" cx="40%" cy="34%" r="72%">
+              <stop offset="0%" stop-color="#d6ef72"/>
+              <stop offset="55%" stop-color="#8fae33"/>
+              <stop offset="100%" stop-color="#56701c"/>
+            </radialGradient>
+          </defs>
+          <!-- drips -->
+          <path d="M52 108 q-4 26 6 30 q9 -5 4 -28z" fill="#6c8a23"/>
+          <path d="M104 104 q7 20 -2 28 q-10 -4 -7 -24z" fill="#6c8a23"/>
+          <!-- lumpy body -->
+          <path d="M75 14
+            q24 -6 33 16 q22 4 17 28 q14 16 -2 31 q4 22 -20 24
+            q-12 16 -31 6 q-22 7 -30 -13 q-22 -6 -15 -29
+            q-11 -19 8 -31 q1 -22 24 -22 q6 -10 13 -9 z"
+            fill="url(#slopG)" stroke="#3f5512" stroke-width="2.5"/>
+          <!-- gross highlight -->
+          <ellipse cx="58" cy="48" rx="13" ry="8" fill="#eafaa6" opacity=".55"/>
+          <!-- a couple of glitchy 'AI' pixels -->
+          <rect x="84" y="60" width="7" height="7" fill="#caf06e"/>
+          <rect x="60" y="84" width="6" height="6" fill="#caf06e"/>
+          <text x="75" y="86" text-anchor="middle" font-family="Helvetica Neue,sans-serif"
+            font-size="20" font-weight="700" fill="#33450f" opacity=".85" letter-spacing="1">SLOP</text>
+        </svg>
+      </div>
+
+      <!-- splatter burst on impact -->
+      <div class="burst">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#8fae33" stroke="#4f661c" stroke-width="2">
+            <circle cx="168" cy="100" r="13"/><circle cx="146" cy="148" r="9"/>
+            <circle cx="100" cy="170" r="12"/><circle cx="54" cy="150" r="8"/>
+            <circle cx="34" cy="102" r="11"/><circle cx="56" cy="56" r="9"/>
+            <circle cx="102" cy="34" r="10"/><circle cx="148" cy="56" r="8"/>
+          </g>
+          <circle cx="100" cy="100" r="78" fill="none" stroke="#7ef6ff" stroke-width="3" opacity=".55"/>
+        </svg>
+      </div>
+
+      <!-- the slop bro: real photo (drop presentation/slop-guy.png); cartoon shows only if missing -->
+      <div class="bro">
+        <img class="bro-photo" src="./slop-guy.png" alt="slop bro"
+          onerror="this.style.display='none';var f=document.getElementById('broFallback');if(f)f.style.display='block';">
+        <svg id="broFallback" style="display:none" viewBox="0 0 320 430" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="skin" cx="44%" cy="34%" r="78%">
+              <stop offset="0%" stop-color="#f3c89c"/>
+              <stop offset="60%" stop-color="#dc9c68"/>
+              <stop offset="100%" stop-color="#b3702f"/>
+            </radialGradient>
+            <linearGradient id="skinLite" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f6d0a4"/>
+              <stop offset="100%" stop-color="#d6925a"/>
+            </linearGradient>
+            <linearGradient id="skinArm" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ecbf90"/>
+              <stop offset="100%" stop-color="#bd7e48"/>
+            </linearGradient>
+            <clipPath id="faceClip"><circle cx="160" cy="68" r="40"/></clipPath>
+          </defs>
+
+          <!-- neck -->
+          <line x1="160" y1="118" x2="160" y2="160" stroke="url(#skin)" stroke-width="36" stroke-linecap="round"/>
+          <!-- traps -->
+          <path d="M112 172 Q160 134 208 172 Z" fill="url(#skin)"/>
+
+          <!-- torso -->
+          <path d="M62 172 L258 172 L212 350 Q160 370 108 350 Z"
+            fill="url(#skin)" stroke="#8f5326" stroke-width="2.5" stroke-linejoin="round"/>
+
+          <!-- delts -->
+          <circle cx="72" cy="180" r="35" fill="url(#skin)" stroke="#8f5326" stroke-width="2.5"/>
+          <circle cx="248" cy="180" r="35" fill="url(#skin)" stroke="#8f5326" stroke-width="2.5"/>
+
+          <!-- pecs -->
+          <ellipse cx="126" cy="202" rx="38" ry="28" fill="url(#skinLite)" stroke="#8f5326" stroke-width="2"/>
+          <ellipse cx="194" cy="202" rx="38" ry="28" fill="url(#skinLite)" stroke="#8f5326" stroke-width="2"/>
+          <path d="M160 178 L160 224" stroke="#8f5326" stroke-width="2.4" opacity=".7"/>
+          <path d="M96 216 Q126 234 156 218" fill="none" stroke="#8f5326" stroke-width="2" opacity=".5"/>
+          <path d="M164 218 Q194 234 224 216" fill="none" stroke="#8f5326" stroke-width="2" opacity=".5"/>
+
+          <!-- six-pack -->
+          <g fill="url(#skinLite)" stroke="#8f5326" stroke-width="1.6">
+            <ellipse cx="146" cy="246" rx="17" ry="13"/><ellipse cx="176" cy="246" rx="17" ry="13"/>
+            <ellipse cx="146" cy="276" rx="17" ry="13"/><ellipse cx="176" cy="276" rx="17" ry="13"/>
+            <ellipse cx="148" cy="306" rx="15" ry="12"/><ellipse cx="174" cy="306" rx="15" ry="12"/>
+          </g>
+          <path d="M160 232 L160 320" stroke="#8f5326" stroke-width="2" opacity=".6"/>
+          <!-- v-line + navel -->
+          <path d="M134 322 L150 352 M188 322 L172 352" stroke="#8f5326" stroke-width="2" opacity=".55" fill="none"/>
+          <ellipse cx="160" cy="324" rx="3.5" ry="5" fill="#8f5326" opacity=".6"/>
+
+          <!-- ARMS: double-biceps flex framing the head -->
+          <!-- left -->
+          <line x1="82" y1="172" x2="108" y2="110" stroke="url(#skinArm)" stroke-width="46" stroke-linecap="round"/>
+          <line x1="108" y1="110" x2="122" y2="54" stroke="url(#skinArm)" stroke-width="31" stroke-linecap="round"/>
+          <ellipse cx="96" cy="138" rx="13" ry="20" fill="#f6d0a4" opacity=".45" transform="rotate(-20 96 138)"/>
+          <!-- right -->
+          <line x1="238" y1="172" x2="212" y2="110" stroke="url(#skinArm)" stroke-width="46" stroke-linecap="round"/>
+          <line x1="212" y1="110" x2="198" y2="54" stroke="url(#skinArm)" stroke-width="31" stroke-linecap="round"/>
+          <ellipse cx="224" cy="138" rx="13" ry="20" fill="#f6d0a4" opacity=".45" transform="rotate(20 224 138)"/>
+          <!-- fists -->
+          <circle cx="124" cy="50" r="16" fill="url(#skinArm)" stroke="#8f5326" stroke-width="2"/>
+          <circle cx="196" cy="50" r="16" fill="url(#skinArm)" stroke="#8f5326" stroke-width="2"/>
+          <path d="M114 46 h20 M114 52 h20" stroke="#8f5326" stroke-width="1.4" opacity=".6"/>
+          <path d="M186 46 h20 M186 52 h20" stroke="#8f5326" stroke-width="1.4" opacity=".6"/>
+
+          <!-- HEAD: drawn fallback (shown if photo missing) -->
+          <g id="fallbackFace">
+            <circle cx="160" cy="68" r="40" fill="url(#skin)" stroke="#8f5326" stroke-width="2"/>
+            <!-- hair -->
+            <path d="M122 56 Q128 24 160 24 Q192 24 198 56 Q188 42 160 42 Q132 42 122 56 Z" fill="#241910"/>
+            <!-- deal-with-it pixel sunglasses -->
+            <rect x="126" y="62" width="68" height="14" rx="1.5" fill="#0a0a0a"/>
+            <rect x="124" y="65" width="6" height="5" fill="#0a0a0a"/>
+            <g fill="#ffffff" opacity=".9">
+              <rect x="130" y="64" width="4" height="4"/><rect x="138" y="68" width="4" height="4"/>
+              <rect x="150" y="64" width="4" height="4"/><rect x="170" y="68" width="4" height="4"/>
+              <rect x="182" y="64" width="4" height="4"/>
+            </g>
+            <!-- smug mouth -->
+            <path d="M150 92 Q160 99 172 91" fill="none" stroke="#7a3b22" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <!-- HEAD: real photo overlay (drop presentation/slop-guy.png to use it) -->
+          <image id="faceImg" href="./slop-guy.png" x="120" y="28" width="80" height="80"
+            clip-path="url(#faceClip)" preserveAspectRatio="xMidYMid slice"
+            onerror="this.remove()"/>
+        </svg>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 1 · TITLE / OVERVIEW (mirrors original dido-brain.html) -->
   <section class="page" data-i="0">
     <div class="t0">
       <div class="t0-top">
@@ -248,12 +631,10 @@
       <div class="lift eyebrow"><span class="pip"></span>The problem</div>
       <h1 class="lift big">The team<br>flies <em>blind.</em></h1>
       <p class="lift lede">Work and decisions don't live in tidy status reports. They live
-        scattered inside individuals' tools — where others can't find them, or even know they exist.</p>
+        scattered inside individuals' tools, where others can't find them, or even know they exist.</p>
       <div class="points lift">
-        <div class="pt"><span class="b" style="color:#7ef6ff"></span><div class="tx">
-          <b>Visibility is a privilege</b><span>Reserved for the few in the right rooms. Everyone should be able to function like a leader.</span></div></div>
         <div class="pt"><span class="b" style="color:#9b8cff"></span><div class="tx">
-          <b>Knowledge is siloed &amp; undiscoverable</b><span>It isn't lost — it's trapped in someone's Fellow, Cowork or Slack, effectively invisible.</span></div></div>
+          <b>Knowledge is siloed &amp; undiscoverable</b><span>It isn't lost; it's trapped in someone's Fellow, Cowork or Slack, effectively invisible.</span></div></div>
         <div class="pt"><span class="b" style="color:#ff9ed0"></span><div class="tx">
           <b>Work is inefficient</b><span>People redo analysis, hunt for context, and decide on partial information.</span></div></div>
       </div>
@@ -266,7 +647,7 @@
       <div class="lift eyebrow"><span class="pip"></span>The solution</div>
       <h1 class="lift big">One brain for<br>the <em>whole team.</em></h1>
       <p class="lift lede">DiDO ingests the work artifacts scattered across everyone's tools into a
-        time-aware org brain that connects them — and answers natural-language questions, grounded in real sources.</p>
+        time-aware org brain that connects them, and answers natural-language questions, grounded in real sources.</p>
       <div class="vp lift">
         <div class="v cy">
           <div class="k">Value prop 01</div>
@@ -276,8 +657,43 @@
         <div class="v vi">
           <div class="k">Value prop 02</div>
           <h3>Democratized transparency</h3>
-          <p>Anyone can ask a question and get a cited answer from real artifacts — so everyone can function like a leader.</p>
+          <p>Anyone can ask a question and get a cited answer from real artifacts, so everyone can function like a leader.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2.5 · WHY THIS PROJECT -->
+  <section class="page" data-i="why">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>Why this project</div>
+      <h1 class="lift big">Why a shared <em>brain.</em></h1>
+      <div class="points lift" style="margin-top:2.4em">
+        <div class="pt"><span class="b" style="color:#7ef6ff"></span><div class="tx">
+          <b>A shared team brain is the unlock</b><span>With AI, giving everyone leader-level visibility into the whole company is a step-change, not an incremental gain.</span></div></div>
+        <div class="pt"><span class="b" style="color:#9b8cff"></span><div class="tx">
+          <b>Study a brain that already works</b><span>We researched gbrain to learn what a well-thought-through brain actually looks like, so we hold an informed opinion on the right brain and ingestion process for Sierra.</span></div></div>
+        <div class="pt"><span class="b" style="color:#ff9ed0"></span><div class="tx">
+          <b>Don't reinvent the hard part</b><span>Lean on production-grade memory infrastructure and strip away the complexity of building our own brain, so our effort goes to solving the problem.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE INTERFACE (moved up from demo) -->
+  <section class="page" data-i="interface">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>The interface</div>
+      <h1 class="lift big">What anyone<br>can <em>ask.</em></h1>
+      <div class="qrows lift">
+        <div class="q"><div class="num">1</div><div class="qt">
+          <b>"What's happening with X this week, and what's blocked?"</b>
+          <span>Status synthesized across Cowork sessions + Fellow meetings, even for work you weren't part of.</span></div></div>
+        <div class="q"><div class="num">2</div><div class="qt">
+          <b>"Why did we decide to do X, and what was the reasoning?"</b>
+          <span>The decision trail pulled across a meeting and a work session, with citations.</span></div></div>
+        <div class="q"><div class="num">3</div><div class="qt">
+          <b>"What do we know about this project or topic?"</b>
+          <span>Knowledge sitting in someone else's tools that you'd otherwise never find.</span></div></div>
       </div>
     </div>
   </section>
@@ -287,23 +703,43 @@
     <div class="pad">
       <div class="lift eyebrow"><span class="pip"></span>The engine</div>
       <h1 class="lift big">gbrain,<br><em>dreaming.</em></h1>
-      <p class="lift lede">We don't build memory infrastructure — we feed a production-grade open-source brain
+      <p class="lift lede">We don't build memory infrastructure. We feed a production-grade open-source brain
         (Garry Tan / YC) the right data and point queries at it.</p>
       <div class="feat lift">
         <div class="f"><span class="ic">◇</span><div><b>Markdown brain in git</b><span>Every fact is human-readable, diffable and auditable.</span></div></div>
         <div class="f"><span class="ic">◷</span><div><b>Compiled truth + timeline</b><span>Current best understanding on top, append-only dated history below. Nothing is ever destroyed.</span></div></div>
-        <div class="f"><span class="ic">⌘</span><div><b>Self-wiring graph</b><span>Every write extracts entities and typed links — with zero LLM calls. Fast and cheap.</span></div></div>
+        <div class="f"><span class="ic">⌘</span><div><b>Self-wiring graph</b><span>Every write extracts entities and typed links, with zero LLM calls. Fast and cheap.</span></div></div>
         <div class="f"><span class="ic">❝</span><div><b>Cited answers</b><span>Hybrid vector + keyword retrieval returns synthesized answers grounded in source pages.</span></div></div>
       </div>
     </div>
     <div class="gmock lift" style="right:6vw;top:22vh">
       <div class="fn">people/ryan.md</div>
       <div class="ct">◆ Compiled truth</div>
-      <div class="truth">Leading the DiDO vertical slice — ingesting Cowork + Fellow into a shared, queryable org brain.</div>
+      <div class="truth">Leading the DiDO vertical slice, ingesting Cowork + Fellow into a shared, queryable org brain.</div>
       <div class="tl">▾ Timeline</div>
       <div class="ev"><span class="d">06-24</span><span class="t">Chose gbrain over building memory from scratch.</span></div>
-      <div class="ev"><span class="d">06-25</span><span class="t">Decided hermes is out of scope — multi-player, not single-operator.</span></div>
+      <div class="ev"><span class="d">06-25</span><span class="t">Decided hermes is out of scope: multi-player, not single-operator.</span></div>
       <div class="ev"><span class="d">06-25</span><span class="t">Slack human-in-the-loop confirmed as a must-build.</span></div>
+    </div>
+  </section>
+
+  <!-- 3.5 · GBRAIN ORIGIN - GARRY TAN / YC -->
+  <section class="page" data-i="origin">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>The engine's pedigree</div>
+      <h1 class="lift big">Not a product.<br><em>A working brain.</em></h1>
+      <p class="lift lede">gbrain wasn't a formal YC product. <b>Garry Tan</b>, YC's President &amp; CEO, built it to power his own OpenClaw / Hermes agents while running Y Combinator.</p>
+      <div class="feat lift">
+        <div class="f"><span class="ic">◷</span><div><b>Grown in private, 2025 → 2026</b><span>Evolved as Tan accumulated a huge operational corpus: meetings, email, calls, social posts, company &amp; people records, and his own notes.</span></div></div>
+        <div class="f"><span class="ic">◆</span><div><b>Open-sourced April 2026</b><span>Released under the MIT licence on Apr 5, 2026. Thousands of GitHub stars within a day.</span></div></div>
+        <div class="f"><span class="ic">⌘</span><div><b>Battle-tested, not a toy</b><span>The same codebase runs the brain behind his real agents, at production scale, every day.</span></div></div>
+        <div class="f"><span class="ic">❝</span><div><b>Why it matters for us</b><span>We stand on a brain its own author operates daily: a credible foundation with zero memory infra to build.</span></div></div>
+      </div>
+    </div>
+    <div class="gmock lift" style="right:6vw;top:24vh">
+      <div class="fn">garrytan/gbrain · production</div>
+      <div class="ct">◆ The real brain, today</div>
+      <div class="truth">The memory layer behind Garry Tan's own OpenClaw / Hermes agents. Open-source, MIT, TypeScript on Bun.</div>
     </div>
   </section>
 
@@ -315,37 +751,92 @@
     </div>
     <div class="flowwrap lift">
       <div class="flow">
-        <div class="stage"><div class="box"><div class="k">Inputs</div><div class="s">Cowork · Fellow · Code</div><span class="tag-soon">Cowork + Fellow</span></div><div class="arr">▶</div></div>
-        <div class="stage"><div class="box"><div class="k">Trigger</div><div class="s">Manual / cron kicks off ingest</div><span class="tag-soon">Manual</span></div><div class="arr">▶</div></div>
-        <div class="stage"><div class="box"><div class="k">Ingest</div><div class="s">Normalize → gbrain pages</div><span class="tag-real">Real-ish</span></div><div class="arr">▶</div></div>
-        <div class="stage core"><div class="box"><div class="k">gbrain · Dreaming</div><div class="s">Store, self-wire, consolidate across time</div><span class="tag-real">Core · Real</span></div><div class="arr">▶</div></div>
-        <div class="stage"><div class="box"><div class="k">Outputs</div><div class="s">Synthesized, cited answers</div><span class="tag-real">Real</span></div><div class="arr">▶</div></div>
-        <div class="stage"><div class="box"><div class="k">You ask</div><div class="s">Query the brain directly</div><span class="tag-soon">OPA later</span></div></div>
+        <div class="stage nav" onclick="event.stopPropagation();go(9)"><div class="box"><div class="k">Inputs</div><div class="s">Cowork · Fellow · Code</div><span class="tag-soon">Cowork + Fellow</span><span class="explore">↗ data pipeline</span></div><div class="arr">▶</div></div>
+        <div class="stage nav" onclick="event.stopPropagation();go(9)"><div class="box"><div class="k">Trigger</div><div class="s">Manual / cron kicks off ingest</div><span class="tag-soon">Manual</span><span class="explore">↗ data pipeline</span></div><div class="arr">▶</div></div>
+        <div class="stage nav" onclick="event.stopPropagation();go(10)"><div class="box"><div class="k">Ingest</div><div class="s">Normalize → gbrain pages</div><span class="tag-real">Real-ish</span><span class="explore">↗ infrastructure</span></div><div class="arr">▶</div></div>
+        <div class="stage core nav" onclick="event.stopPropagation();go(12)"><div class="box"><div class="k">gbrain · Dreaming</div><div class="s">Store, self-wire, consolidate across time</div><span class="tag-real">Core · Real</span><span class="explore">↗ dream cycle</span></div><div class="arr">▶</div></div>
+        <div class="stage nav" onclick="event.stopPropagation();go(11)"><div class="box"><div class="k">Outputs</div><div class="s">Synthesized, cited answers</div><span class="tag-real">Real</span><span class="explore">↗ MCP layer</span></div><div class="arr">▶</div></div>
+        <div class="stage nav" onclick="event.stopPropagation();go(11)"><div class="box"><div class="k">You ask</div><div class="s">Query the brain directly</div><span class="tag-soon">OPA later</span><span class="explore">↗ MCP layer</span></div></div>
       </div>
     </div>
-    <div class="hitl lift">When the brain hits a gap only a human can fill <span class="pp"></span> it asks
-      <b>Ryan on Slack</b> <span class="pp"></span> folds the answer back into the next dream cycle</div>
   </section>
 
-  <!-- 5 · DEMO / CLOSING -->
-  <section class="page" data-i="5">
-    <div class="pad">
-      <div class="lift eyebrow"><span class="pip"></span>The demo</div>
-      <h1 class="lift big">What anyone<br>can <em>ask.</em></h1>
-      <div class="qrows lift">
-        <div class="q"><div class="num">1</div><div class="qt">
-          <b>"What's happening with X this week — and what's blocked?"</b>
-          <span>Status synthesized across Cowork sessions + Fellow meetings, even for work you weren't part of.</span></div></div>
-        <div class="q"><div class="num">2</div><div class="qt">
-          <b>"Why did we decide to do X, and what was the reasoning?"</b>
-          <span>The decision trail pulled across a meeting and a work session, with citations.</span></div></div>
-        <div class="q"><div class="num">3</div><div class="qt">
-          <b>"What do we know about this project or topic?"</b>
-          <span>Knowledge sitting in someone else's tools that you'd otherwise never find.</span></div></div>
-      </div>
-      <p class="lift lede" style="margin-top:1.6em;color:#bdd6ee">Real gbrain. A real Slack human-in-the-loop.
-        A grounded foundation to keep building — from one person's data to the whole company.</p>
+  <!-- 5 · DEEP DIVE · DATA PIPELINE -->
+  <section class="page" data-i="5a">
+    <div class="dd-title">
+      <div class="lift eyebrow" style="text-align:center"><span class="pip"></span>Deep dive · Data pipeline &nbsp;<span style="color:#7fb0d6">· simulated for the hack</span></div>
+      <h1 class="lift big" style="font-size:clamp(28px,4.2vw,56px)">Getting work <em>into the brain.</em></h1>
+      <p class="lift dd-lede">Two sources, one ingest endpoint. For the hackathon the inputs are pre-downloaded and triggered by hand. Raw capture now; enrichment happens later, in the dream cycle.</p>
     </div>
+    <div class="lanes lift">
+      <div class="lane">
+        <div class="src"><b>Fellow</b><span>meeting transcripts</span></div>
+        <div class="conn"><span>webhook push</span></div>
+        <div class="dst"><b>gbrain · POST /ingest</b><span>OAuth write scope · raw markdown body · <code>X-Gbrain-Slug</code></span></div>
+      </div>
+      <div class="lane">
+        <div class="src"><b>Cowork</b><span>local session files</span></div>
+        <div class="conn"><span>blueplane daemon</span></div>
+        <div class="dst"><b>gbrain · POST /ingest</b><span>watches files on disk · pushes each session up to the brain</span></div>
+      </div>
+    </div>
+    <div class="dd-result lift">Built at the hackathon &nbsp;<b>823</b>&nbsp; wiki content pages ingested manually</div>
+  </section>
+
+  <!-- 6 · DEEP DIVE · GBRAIN INFRASTRUCTURE -->
+  <section class="page" data-i="5b">
+    <div class="pad-wide" style="top:11vh">
+      <div class="lift eyebrow"><span class="pip"></span>Deep dive · gbrain infrastructure</div>
+      <h1 class="lift big">Git is <em>truth.</em><br>Postgres is <em>speed.</em></h1>
+      <p class="lift lede">Two stores, one rule: durable markdown in git is the source of truth; Supabase is a rebuildable cache built for retrieval.</p>
+      <div class="vp lift">
+        <div class="v cy">
+          <div class="k">Source of truth</div>
+          <h3>GitHub markdown repos</h3>
+          <p>Knowledge is written as plain-text markdown. Every overnight change is a <code>git diff</code> you can review. Transparency is native to the store, not bolted on.</p>
+        </div>
+        <div class="v vi">
+          <div class="k">Query engine</div>
+          <h3>Supabase · Postgres + pgvector</h3>
+          <p><code>gbrain sync</code> imports the repo, <b>chunks</b> each page, <b>embeds</b> it (text-embedding-3-large, 1536d) and serves hybrid vector + keyword retrieval.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · DEEP DIVE · MCP LAYER + AGENT LOOP -->
+  <section class="page" data-i="5c">
+    <div class="center-top">
+      <div class="lift eyebrow" style="text-align:center"><span class="pip"></span>Deep dive · The MCP layer</div>
+      <h1 class="lift big" style="font-size:clamp(26px,4vw,52px)">gbrain is the brain. <em>MCP clients are the hands.</em></h1>
+      <p class="lift dd-lede">gbrain exposes ~90 tools and ~34 markdown skills over MCP. A thin client drives the agent loop, so there's no central agent to run.</p>
+    </div>
+    <div class="flowwrap lift" style="top:52vh">
+      <div class="flow">
+        <div class="stage"><div class="box"><div class="k">1 · Consume</div><div class="s">MCP client pulls gbrain's tools + skills</div></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">2 · Synthesize</div><div class="s">Agent loop (Claude Sonnet 4.6) compounds new knowledge</div></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">3 · Write back</div><div class="s">Markdown into the GitHub repo, compiled truth + timeline</div></div><div class="arr">▶</div></div>
+        <div class="stage core"><div class="box"><div class="k">4 · Embed + sync</div><div class="s">gbrain embeds the diff and syncs to Supabase</div></div><div class="arr">↺</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · DEEP DIVE · DREAMING CRON + HITL -->
+  <section class="page" data-i="5d">
+    <div class="center-top">
+      <div class="lift eyebrow" style="text-align:center"><span class="pip"></span>Deep dive · The dream cycle</div>
+      <h1 class="lift big" style="font-size:clamp(26px,4vw,52px)">The brain <em>sleeps</em> to stay sharp.</h1>
+      <p class="lift dd-lede">A nightly cron runs gbrain's dream cycle, a stateless batch job that consolidates the day's new knowledge while no one's watching. Inspired by biological sleep.</p>
+    </div>
+    <div class="flowwrap lift" style="top:52vh">
+      <div class="flow">
+        <div class="stage"><div class="box"><div class="k">Accumulate</div><div class="s">Everything new since the last cycle</div></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">Synthesize</div><div class="s">Transcripts + sessions → pages</div></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">Extract + link</div><div class="s">Facts, entities, typed links</div></div><div class="arr">▶</div></div>
+        <div class="stage core"><div class="box"><div class="k">Consolidate + remap</div><div class="s">Dated timelines · clean up · probe contradictions</div></div></div>
+      </div>
+    </div>
+    <div class="hitl lift" style="top:80vh">Coming next: when a remap is ambiguous the probe never overwrites silently <span class="pp"></span> it asks <b>the right human on Slack</b> <span class="pp"></span> and folds the answer into the next dream cycle</div>
   </section>
 
 </div>
@@ -487,12 +978,19 @@ let waveRate=6200, moteRate=900;
 
 // per-scene directives
 const SCENES = [
+  {cx:.70, cy:.50, scale:.82, scatter:0, dim:0.32, waveRate:5200, moteRate:900},  // 0 slop gag (brain parked right, behind shield)
   {cx:.50, cy:.50, scale:1.00, scatter:0, dim:0.00, waveRate:6200, moteRate:850},  // title
   {cx:.74, cy:.52, scale:.60, scatter:1, dim:0.16, waveRate:9000, moteRate:1700}, // problem (silos parked right)
   {cx:.70, cy:.54, scale:.94, scatter:0, dim:0.34, waveRate:3200, moteRate:380},  // solution (heavy ingest)
+  {cx:.72, cy:.52, scale:.82, scatter:0, dim:0.40, waveRate:4600, moteRate:800},  // why this project
+  {cx:.70, cy:.52, scale:.92, scatter:0, dim:0.40, waveRate:4200, moteRate:600},  // interface (was demo)
   {cx:.74, cy:.55, scale:.86, scatter:0, dim:0.40, waveRate:2200, moteRate:1100}, // gbrain (heavy dreaming)
+  {cx:.72, cy:.50, scale:.80, scatter:0, dim:0.44, waveRate:5200, moteRate:1000}, // gbrain origin (Garry/YC)
   {cx:.50, cy:.20, scale:.42, scatter:0, dim:0.46, waveRate:5200, moteRate:900},  // architecture
-  {cx:.70, cy:.52, scale:.92, scatter:0, dim:0.40, waveRate:4200, moteRate:600},  // demo
+  {cx:.50, cy:.18, scale:.40, scatter:0, dim:0.52, waveRate:4200, moteRate:360},  // 5a data pipeline (heavy ingest motes)
+  {cx:.50, cy:.20, scale:.42, scatter:0, dim:0.54, waveRate:3000, moteRate:950},  // 5b infrastructure (sync waves)
+  {cx:.50, cy:.20, scale:.42, scatter:0, dim:0.50, waveRate:2400, moteRate:700},  // 5c mcp loop (busy pulses)
+  {cx:.50, cy:.19, scale:.44, scatter:0, dim:0.52, waveRate:1700, moteRate:1200}, // 5d dreaming (heavy waves)
 ];
 
 /* ---------- dynamic elements ---------- */
@@ -581,7 +1079,7 @@ function frame(now){
     }
   }
 
-  // edges — connections break apart as nodes scatter
+  // edges - connections break apart as nodes scatter
   for(const e of edges){
     const a=nodes[e.a], b=nodes[e.b];
     const lum=(a.glow+b.glow)*0.5;
@@ -734,8 +1232,8 @@ function applyScene(i){
   camT.cx=s.cx; camT.cy=s.cy; camT.scale=s.scale;
   scatterT=s.scatter; waveRate=s.waveRate; moteRate=s.moteRate;
   dimEl.style.opacity=s.dim;
-  brandmini.style.opacity = i===0 ? 0 : 1;
-  document.body.classList.toggle('cover', i===0); // hide nav counter on title
+  brandmini.style.opacity = i<=1 ? 0 : 1;
+  document.body.classList.toggle('cover', i<=1); // hide mini-brand + nav counter on gag & title
 }
 
 // cycle the DREAM CYCLE state label on the title page
