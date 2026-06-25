@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DiDO — The Org Brain, Dreaming</title>
+<style>
+  :root{
+    --ink:#04060f;
+    --cyan:#7ef6ff;
+    --teal:#34d8d2;
+    --violet:#9b8cff;
+    --gold:#ffd9a0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--ink);overflow:hidden}
+  body{
+    font-family:"Helvetica Neue",-apple-system,Segoe UI,Roboto,sans-serif;
+    color:#eaf3ff;
+  }
+  #stage{position:fixed;inset:0}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* Wordmark & overlay */
+  .overlay{position:fixed;inset:0;pointer-events:none;display:flex;flex-direction:column;
+    justify-content:space-between;padding:5.2vh 4.4vw}
+  .top{display:flex;justify-content:space-between;align-items:flex-start}
+  .brand{font-weight:200;letter-spacing:.62em;font-size:clamp(22px,3.2vw,46px);
+    text-transform:uppercase;
+    background:linear-gradient(90deg,#bfefff 0%,#9b8cff 55%,#ffd9a0 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 40px rgba(123,150,255,.25);
+    animation:breathe 7s ease-in-out infinite}
+  .brand span{margin-left:-.62em} /* trim trailing tracking */
+  .tag{font-weight:300;letter-spacing:.34em;font-size:clamp(8px,1vw,12px);
+    text-transform:uppercase;color:#8fb6d8;margin-top:1.1em;opacity:.0;
+    animation:fadein 2.4s ease forwards .8s}
+  .meta{text-align:right;font-weight:300;letter-spacing:.26em;font-size:clamp(8px,.85vw,11px);
+    color:#6f8fb6;text-transform:uppercase;line-height:2.1;opacity:0;
+    animation:fadein 2.4s ease forwards 1.4s}
+  .meta b{color:#bfe6ff;font-weight:400}
+  .bottom{display:flex;justify-content:space-between;align-items:flex-end}
+  .legend{display:flex;gap:1.8vw;opacity:0;animation:fadein 2.4s ease forwards 1.9s}
+  .legend div{font-weight:300;letter-spacing:.2em;font-size:clamp(8px,.82vw,11px);
+    color:#7e9ec0;text-transform:uppercase;display:flex;align-items:center;gap:.6em}
+  .dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 10px currentColor}
+  .state{font-weight:300;letter-spacing:.34em;font-size:clamp(9px,1vw,13px);
+    text-transform:uppercase;color:#a9c8e6;opacity:0;
+    animation:fadein 2.4s ease forwards 2.2s}
+  .state b{color:#ffe6c2;font-weight:400}
+  .pulse-dot{display:inline-block;width:8px;height:8px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 12px var(--gold);margin-right:.8em;
+    vertical-align:middle;animation:beat 2.6s ease-in-out infinite}
+
+  @keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
+  @keyframes fadein{to{opacity:1}}
+  @keyframes beat{0%,100%{transform:scale(.7);opacity:.55}50%{transform:scale(1.15);opacity:1}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg"></canvas>
+  <canvas id="net"></canvas>
+</div>
+
+<div class="overlay">
+  <div class="top">
+    <div>
+      <div class="brand">DiDO<span></span></div>
+      <div class="tag">The time-aware org brain · dreaming</div>
+    </div>
+    <div class="meta">
+      Ingesting &nbsp;<b>·</b>&nbsp; Self-wiring &nbsp;<b>·</b>&nbsp; Consolidating<br>
+      memory across time
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="legend">
+      <div><span class="dot" style="color:#7ef6ff"></span>Cowork</div>
+      <div><span class="dot" style="color:#9b8cff"></span>Fellow</div>
+      <div><span class="dot" style="color:#ff9ed0"></span>Slack</div>
+      <div><span class="dot" style="color:#ffd9a0"></span>Cursor</div>
+    </div>
+    <div class="state"><span class="pulse-dot"></span><b id="phase">DREAM CYCLE</b> &nbsp;active</div>
+  </div>
+</div>
+
+<script>
+const bg = document.getElementById('bg');
+const net = document.getElementById('net');
+const bx = bg.getContext('2d');
+const ctx = net.getContext('2d');
+
+let W,H,DPR,CX,CY,SCALE;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  [bg,net].forEach(c=>{c.width=W*DPR;c.height=H*DPR;});
+  [bx,ctx].forEach(c=>{c.setTransform(DPR,0,0,DPR,0,0);});
+  CX = W*0.5; CY = H*0.5;
+  SCALE = Math.min(W,H);
+  buildBrain();
+  drawBackground();
+}
+
+/* ---------- palette ---------- */
+const SRC = [
+  {name:'Cowork', col:[126,246,255]},
+  {name:'Fellow', col:[155,140,255]},
+  {name:'Slack',  col:[255,158,208]},
+  {name:'Cursor', col:[255,217,160]},
+];
+
+/* ---------- static ethereal background ---------- */
+let stars=[];
+function seedStars(){
+  stars=[];
+  const n = Math.round((W*H)/9000);
+  for(let i=0;i<n;i++){
+    stars.push({x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*1.3+.2, a:Math.random()*.5+.15,
+      tw:Math.random()*Math.PI*2, ts:Math.random()*.8+.3});
+  }
+}
+function drawBackground(){
+  // deep radial dream space
+  let g = bx.createRadialGradient(CX,CY*0.92,0,CX,CY,SCALE*0.95);
+  g.addColorStop(0,'#10183a');
+  g.addColorStop(.35,'#0a0f24');
+  g.addColorStop(1,'#04060f');
+  bx.fillStyle=g; bx.fillRect(0,0,W,H);
+
+  // soft aurora veils
+  bx.globalCompositeOperation='lighter';
+  const veils=[
+    {x:CX-SCALE*.22,y:CY-SCALE*.12,r:SCALE*.5,c:'rgba(80,90,220,0.10)'},
+    {x:CX+SCALE*.24,y:CY+SCALE*.05,r:SCALE*.5,c:'rgba(40,200,200,0.08)'},
+    {x:CX,y:CY-SCALE*.3,r:SCALE*.45,c:'rgba(255,200,140,0.05)'},
+  ];
+  veils.forEach(v=>{
+    let vg=bx.createRadialGradient(v.x,v.y,0,v.x,v.y,v.r);
+    vg.addColorStop(0,v.c); vg.addColorStop(1,'rgba(0,0,0,0)');
+    bx.fillStyle=vg; bx.fillRect(0,0,W,H);
+  });
+  bx.globalCompositeOperation='source-over';
+  seedStars();
+}
+
+/* ---------- brain shape mask ---------- */
+// Returns true if (nx,ny) in normalized brain-centred coords lies inside a
+// top-down brain silhouette (two lobes + central fissure + organic edge).
+function inBrain(nx,ny){
+  const ax=0.40, ay=0.30;            // lobe radii
+  const offx=0.205;                  // hemisphere offset
+  // organic wobble of the radius by angle
+  const wob = 1 + 0.10*Math.sin((Math.atan2(ny,nx))*6) + 0.05*Math.sin(ny*22);
+  // left lobe centred at -offx, right at +offx
+  const dl = ((nx+offx)/(ax*wob))**2 + (ny/(ay*wob))**2;
+  const dr = ((nx-offx)/(ax*wob))**2 + (ny/(ay*wob))**2;
+  const inside = dl<1 || dr<1;
+  // central longitudinal fissure
+  const fissure = Math.abs(nx) < (0.022 + 0.018*Math.cos(ny*9)) && Math.abs(ny)<0.27;
+  // brain stem nub at bottom
+  const stem = (nx*nx)/(0.05**2) + ((ny-0.30)/0.10)**2 < 1;
+  return (inside && !fissure) || stem;
+}
+
+let nodes=[], edges=[], pulses=[], motes=[], waves=[], ripples=[];
+function buildBrain(){
+  nodes=[]; edges=[];
+  const target = Math.round(Math.min(360, Math.max(200, (W*H)/5200)));
+  const S = SCALE*0.92;
+  let guard=0;
+  while(nodes.length<target && guard<target*60){
+    guard++;
+    const nx=(Math.random()*2-1)*0.55;
+    const ny=(Math.random()*2-1)*0.45;
+    if(!inBrain(nx,ny)) continue;
+    nodes.push({
+      bx:nx, by:ny,
+      x:CX+nx*S, y:CY+ny*S + S*0.01,
+      base:Math.random()*0.4+0.25,   // baseline brightness
+      glow:0,                         // transient brightness
+      r:Math.random()*1.4+1.1,
+      ph:Math.random()*Math.PI*2,
+      hue: Math.random(),            // 0..1 cyan->violet
+    });
+  }
+  // edges: connect near neighbours, capped degree
+  const maxD = SCALE*0.072, maxDeg=4;
+  const deg=new Array(nodes.length).fill(0);
+  for(let i=0;i<nodes.length;i++){
+    // sort-ish: just scan, cheap enough for ~360
+    let cands=[];
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+      const d=Math.hypot(dx,dy);
+      if(d<maxD) cands.push([d,j]);
+    }
+    cands.sort((a,b)=>a[0]-b[0]);
+    for(const [d,j] of cands){
+      if(deg[i]>=maxDeg) break;
+      if(deg[j]>=maxDeg) continue;
+      edges.push({a:i,b:j,d});
+      deg[i]++; deg[j]++;
+    }
+  }
+}
+
+/* ---------- dynamic elements ---------- */
+function spawnPulse(){
+  if(!edges.length) return;
+  const e = edges[(Math.random()*edges.length)|0];
+  const dir = Math.random()<.5;
+  pulses.push({e, t:0, sp:0.6+Math.random()*0.9, dir,
+    col: Math.random()<.5?[126,246,255]:[155,140,255]});
+}
+function spawnMote(){
+  const s = SRC[(Math.random()*SRC.length)|0];
+  const side=(Math.random()*4)|0;
+  let x,y;
+  const m=SCALE*0.12;
+  if(side===0){x=-m;y=Math.random()*H;}
+  else if(side===1){x=W+m;y=Math.random()*H;}
+  else if(side===2){x=Math.random()*W;y=-m;}
+  else{x=Math.random()*W;y=H+m;}
+  const tgt = nodes[(Math.random()*nodes.length)|0];
+  motes.push({x,y,sx:x,sy:y,tx:tgt.x,ty:tgt.y,t:0,
+    sp:0.18+Math.random()*0.12, col:s.col, name:s.name, tgt,
+    trail:[]});
+}
+let lastWave=-99;
+function spawnWave(now){
+  waves.push({t:0, r0:SCALE*0.02});
+  lastWave=now;
+}
+function ripple(x,y,col){
+  ripples.push({x,y,t:0,col});
+}
+
+/* ---------- render loop ---------- */
+let t0=performance.now();
+let lastPulse=0, lastMote=0;
+const phaseEl=document.getElementById('phase');
+const phases=['DREAM CYCLE','CONSOLIDATING','SELF-WIRING','TIME-AWARE RECALL'];
+let phaseIdx=0, lastPhase=0;
+
+function frame(now){
+  const time=(now-t0)/1000;
+  ctx.clearRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+
+  // --- twinkle stars on net layer (cheap) ---
+  for(const s of stars){
+    const a=s.a*(0.6+0.4*Math.sin(time*s.ts+s.tw));
+    ctx.fillStyle=`rgba(200,220,255,${a})`;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+  }
+
+  // --- spawn cadence ---
+  if(now-lastPulse>120){ spawnPulse(); if(Math.random()<.4) spawnPulse(); lastPulse=now; }
+  if(now-lastMote>900){ spawnMote(); lastMote=now; }
+  if(now-lastWave>6200){ spawnWave(now); }
+  if(now-lastPhase>4200){ phaseIdx=(phaseIdx+1)%phases.length; phaseEl.textContent=phases[phaseIdx]; lastPhase=now; }
+
+  // --- dream waves (memory consolidation sweeps) ---
+  const maxR=SCALE*0.62;
+  for(let i=waves.length-1;i>=0;i--){
+    const wv=waves[i]; wv.t+=0.0045;
+    const r=wv.r0+wv.t*maxR;
+    const fade=1-wv.t;
+    if(wv.t>=1){waves.splice(i,1);continue;}
+    // draw faint expanding ring
+    ctx.strokeStyle=`rgba(150,200,255,${0.12*fade})`;
+    ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(CX,CY+SCALE*0.01,r,0,7);ctx.stroke();
+    ctx.strokeStyle=`rgba(255,220,170,${0.07*fade})`;
+    ctx.lineWidth=6;
+    ctx.beginPath();ctx.arc(CX,CY+SCALE*0.01,r,0,7);ctx.stroke();
+    // light up nodes the wavefront passes
+    const band=SCALE*0.05;
+    for(const nd of nodes){
+      const dd=Math.hypot(nd.x-CX,nd.y-(CY+SCALE*0.01));
+      if(Math.abs(dd-r)<band){ nd.glow=Math.max(nd.glow, fade*0.9); }
+    }
+  }
+
+  // --- edges (synapses) ---
+  for(const e of edges){
+    const a=nodes[e.a], b=nodes[e.b];
+    const lum=(a.glow+b.glow)*0.5;
+    const baseA=0.05+0.10*lum;
+    ctx.strokeStyle=`rgba(120,180,230,${baseA})`;
+    ctx.lineWidth=0.6+lum*1.2;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  }
+
+  // --- pulses travelling along synapses ---
+  for(let i=pulses.length-1;i>=0;i--){
+    const p=pulses[i]; p.t+=0.016*p.sp;
+    if(p.t>=1){
+      // arrival flash
+      const end = p.dir? nodes[p.e.b]:nodes[p.e.a];
+      end.glow=Math.min(1.4,end.glow+0.8);
+      pulses.splice(i,1);continue;
+    }
+    const a=nodes[p.e.a], b=nodes[p.e.b];
+    const tt=p.dir?p.t:1-p.t;
+    const x=a.x+(b.x-a.x)*tt, y=a.y+(b.y-a.y)*tt;
+    const [r,gc,bl]=p.col;
+    // trailing comet
+    for(let k=0;k<5;k++){
+      const tk=tt-(p.dir?1:-1)*k*0.012;
+      if(tk<0||tk>1)continue;
+      const xx=a.x+(b.x-a.x)*tk, yy=a.y+(b.y-a.y)*tk;
+      const al=(1-k/5)*0.5;
+      ctx.fillStyle=`rgba(${r},${gc},${bl},${al})`;
+      ctx.beginPath();ctx.arc(xx,yy,2.2-k*0.3,0,7);ctx.fill();
+    }
+    ctx.shadowBlur=10;ctx.shadowColor=`rgba(${r},${gc},${bl},0.9)`;
+    ctx.fillStyle=`rgba(${r},${gc},${bl},0.95)`;
+    ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fill();
+    ctx.shadowBlur=0;
+  }
+
+  // --- knowledge motes ingested from siloed tools ---
+  for(let i=motes.length-1;i>=0;i--){
+    const m=motes[i]; m.t+=0.01*m.sp*60/60;
+    const e=1-Math.pow(1-Math.min(m.t,1),3); // ease-out
+    m.x=m.sx+(m.tx-m.sx)*e;
+    m.y=m.sy+(m.ty-m.sy)*e;
+    m.trail.push([m.x,m.y]); if(m.trail.length>16)m.trail.shift();
+    const [r,g,b]=m.col;
+    // trail
+    for(let k=0;k<m.trail.length;k++){
+      const al=(k/m.trail.length)*0.45;
+      ctx.fillStyle=`rgba(${r},${g},${b},${al})`;
+      ctx.beginPath();ctx.arc(m.trail[k][0],m.trail[k][1],1.6*(k/m.trail.length)+0.4,0,7);ctx.fill();
+    }
+    // head
+    ctx.shadowBlur=14;ctx.shadowColor=`rgba(${r},${g},${b},0.9)`;
+    ctx.fillStyle=`rgba(${r},${g},${b},0.95)`;
+    ctx.beginPath();ctx.arc(m.x,m.y,3,0,7);ctx.fill();
+    ctx.shadowBlur=0;
+    // faint source label early in flight
+    if(m.t<0.55){
+      ctx.globalCompositeOperation='source-over';
+      ctx.font='300 10px Helvetica Neue, sans-serif';
+      ctx.fillStyle=`rgba(${r},${g},${b},${0.5*(1-m.t/0.55)})`;
+      ctx.textAlign='center';
+      ctx.fillText(m.name.toUpperCase(), m.x, m.y-9);
+      ctx.globalCompositeOperation='lighter';
+    }
+    if(m.t>=1){
+      m.tgt.glow=1.4; ripple(m.tx,m.ty,m.col); spawnPulse();
+      motes.splice(i,1);
+    }
+  }
+
+  // --- absorption ripples ---
+  for(let i=ripples.length-1;i>=0;i--){
+    const rp=ripples[i]; rp.t+=0.03;
+    if(rp.t>=1){ripples.splice(i,1);continue;}
+    const [r,g,b]=rp.col;
+    ctx.strokeStyle=`rgba(${r},${g},${b},${0.6*(1-rp.t)})`;
+    ctx.lineWidth=1.5*(1-rp.t)+0.3;
+    ctx.beginPath();ctx.arc(rp.x,rp.y,2+rp.t*22,0,7);ctx.stroke();
+  }
+
+  // --- nodes (neurons) ---
+  for(const nd of nodes){
+    nd.glow*=0.94;
+    const tw=0.5+0.5*Math.sin(time*1.3+nd.ph);
+    const b = nd.base*(0.6+0.4*tw)+nd.glow;
+    // hue blend cyan(126,246,255) -> violet(165,150,255)
+    const r=Math.round(126+(165-126)*nd.hue);
+    const g=Math.round(246+(150-246)*nd.hue);
+    const bl=255;
+    const rad=nd.r*(1+nd.glow*1.1);
+    // halo
+    ctx.fillStyle=`rgba(${r},${g},${bl},${Math.min(0.9,0.18*b)})`;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,rad*3.2,0,7);ctx.fill();
+    // core
+    ctx.fillStyle=`rgba(${Math.min(255,r+60)},${Math.min(255,g+10)},255,${Math.min(1,0.5+b)})`;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,rad,0,7);ctx.fill();
+  }
+
+  // central soft glow heart of the brain — gentle breathing
+  const beat=0.5+0.5*Math.sin(time*0.9);
+  const hg=ctx.createRadialGradient(CX,CY,0,CX,CY,SCALE*0.30);
+  hg.addColorStop(0,`rgba(150,170,255,${0.05+0.04*beat})`);
+  hg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=hg;ctx.beginPath();ctx.arc(CX,CY,SCALE*0.30,0,7);ctx.fill();
+
+  ctx.globalCompositeOperation='source-over';
+
+  // vignette for that filmic, high-class depth
+  const vg=ctx.createRadialGradient(CX,CY,SCALE*0.3,CX,CY,SCALE*0.78);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(2,4,12,0.55)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize', ()=>{clearTimeout(window._rz);window._rz=setTimeout(resize,150);});
+resize();
+// pre-stage a wave and motes so the opening frame is alive
+spawnWave(performance.now());
+for(let i=0;i<3;i++) spawnMote();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
