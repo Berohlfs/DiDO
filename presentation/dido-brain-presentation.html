@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DiDO — The Org Brain</title>
+<style>
+  :root{
+    --ink:#04060f;
+    --cyan:#7ef6ff;
+    --teal:#34d8d2;
+    --violet:#9b8cff;
+    --gold:#ffd9a0;
+    --pink:#ff9ed0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--ink);overflow:hidden}
+  body{
+    font-family:"Helvetica Neue",-apple-system,Segoe UI,Roboto,sans-serif;
+    color:#eaf3ff;
+  }
+  #stage{position:fixed;inset:0}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* dim veil between canvas and content for legibility */
+  #dim{position:fixed;inset:0;background:#04060f;opacity:0;
+    transition:opacity 1.1s ease;pointer-events:none;z-index:2}
+
+  /* ---------- persistent chrome ---------- */
+  .chrome{position:fixed;inset:0;pointer-events:none;z-index:5}
+  .brandmini{position:absolute;top:4.6vh;left:4.4vw;font-weight:200;
+    letter-spacing:.5em;font-size:clamp(15px,1.7vw,22px);
+    background:linear-gradient(90deg,#bfefff 0%,#9b8cff 55%,#ffd9a0 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;transition:opacity 1s ease}
+  .brandmini span{margin-left:-.5em}
+  .counter{position:absolute;bottom:4.6vh;right:4.6vw;font-weight:300;
+    letter-spacing:.3em;font-size:clamp(9px,.9vw,12px);color:#6f8fb6}
+  .counter b{color:#bfe6ff;font-weight:400}
+  .navhint{position:absolute;bottom:4.6vh;right:4.6vw;transform:translateX(-7em);
+    font-size:clamp(9px,.9vw,12px);letter-spacing:.3em;color:#43577a}
+  .dots{position:absolute;bottom:4.7vh;left:50%;transform:translateX(-50%);
+    display:flex;gap:13px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:#26344f;
+    transition:all .5s ease;cursor:pointer;pointer-events:auto}
+  .dots i.on{background:var(--cyan);box-shadow:0 0 12px var(--cyan);width:22px;border-radius:4px}
+  .cover .counter,.cover .navhint{opacity:0;transition:opacity .4s ease}
+
+  /* ---------- pages ---------- */
+  .pages{position:fixed;inset:0;z-index:4}
+  .page{position:absolute;inset:0;opacity:0;pointer-events:none;
+    transition:opacity .7s ease}
+  .page.active{opacity:1}
+  .lift{opacity:0;transform:translateY(26px);
+    transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .page.active .lift{opacity:1;transform:translateY(0)}
+  .page.active .lift:nth-child(1){transition-delay:.15s}
+  .page.active .lift:nth-child(2){transition-delay:.30s}
+  .page.active .lift:nth-child(3){transition-delay:.45s}
+  .page.active .lift:nth-child(4){transition-delay:.60s}
+  .page.active .lift:nth-child(5){transition-delay:.75s}
+
+  .eyebrow{font-weight:300;letter-spacing:.42em;font-size:clamp(9px,.95vw,12px);
+    text-transform:uppercase;color:#7fb0d6;margin-bottom:1.5em}
+  .eyebrow .pip{display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 10px var(--gold);margin-right:1em;vertical-align:middle}
+  h1.big{font-weight:200;letter-spacing:.02em;line-height:1.04;
+    font-size:clamp(34px,5.4vw,76px);
+    background:linear-gradient(96deg,#dff4ff 0%,#a8c8ff 42%,#9b8cff 72%,#ffd9a0 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 60px rgba(123,150,255,.18)}
+  h1.big em{font-style:normal;color:transparent;
+    background:linear-gradient(96deg,#7ef6ff,#9b8cff);
+    -webkit-background-clip:text;background-clip:text}
+  .lede{font-weight:300;color:#cde0f4;font-size:clamp(14px,1.45vw,21px);
+    line-height:1.6;max-width:30em;margin-top:1em;opacity:.92}
+
+  /* glass card */
+  .card{position:absolute;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+    background:linear-gradient(160deg,rgba(20,28,56,.62),rgba(8,12,28,.46));
+    border:1px solid rgba(155,140,255,.22);border-radius:20px;
+    box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+    padding:clamp(26px,3vw,46px)}
+
+  /* point list */
+  .points{display:flex;flex-direction:column;gap:1.15em;margin-top:1.9em}
+  .pt{display:flex;gap:1em;align-items:flex-start}
+  .pt .b{width:9px;height:9px;border-radius:50%;margin-top:.5em;flex:0 0 auto;
+    box-shadow:0 0 12px currentColor}
+  .pt .tx b{display:block;font-weight:500;color:#eaf3ff;font-size:clamp(14px,1.3vw,18px);
+    letter-spacing:.01em;margin-bottom:.18em}
+  .pt .tx span{font-weight:300;color:#a9c2dc;font-size:clamp(12px,1.12vw,15px);line-height:1.5}
+
+  /* value prop cards */
+  .vp{display:flex;gap:1.4vw;margin-top:2.2em;flex-wrap:wrap}
+  .vp .v{flex:1 1 0;min-width:230px;background:rgba(10,16,34,.5);
+    border:1px solid rgba(126,246,255,.16);border-radius:16px;padding:1.5em 1.6em}
+  .vp .v .k{font-weight:300;letter-spacing:.32em;text-transform:uppercase;
+    font-size:clamp(9px,.85vw,11px);color:#7fb0d6;margin-bottom:.9em}
+  .vp .v h3{font-weight:400;font-size:clamp(17px,1.7vw,24px);margin-bottom:.5em;color:#eaf3ff}
+  .vp .v p{font-weight:300;color:#a9c2dc;font-size:clamp(12px,1.12vw,15px);line-height:1.55}
+  .vp .v.cy{border-color:rgba(126,246,255,.3)}
+  .vp .v.vi{border-color:rgba(155,140,255,.32)}
+
+  /* gbrain feature grid */
+  .feat{display:grid;grid-template-columns:1fr 1fr;gap:1em 1.6em;margin-top:1.9em}
+  .feat .f{display:flex;gap:.8em;align-items:flex-start}
+  .feat .f .ic{font-size:1.1em;line-height:1.4;color:var(--gold)}
+  .feat .f b{display:block;font-weight:500;color:#eaf3ff;font-size:clamp(13px,1.2vw,16px);margin-bottom:.15em}
+  .feat .f span{font-weight:300;color:#9fb8d4;font-size:clamp(11px,1.02vw,14px);line-height:1.45}
+
+  /* gbrain page mock */
+  .gmock{position:absolute;backdrop-filter:blur(6px);
+    background:linear-gradient(160deg,rgba(14,20,44,.78),rgba(7,11,26,.7));
+    border:1px solid rgba(126,246,255,.22);border-radius:16px;padding:1.5em 1.6em;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);width:clamp(280px,26vw,360px)}
+  .gmock .fn{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#6fd6d0;
+    letter-spacing:.05em;margin-bottom:1em;opacity:.85}
+  .gmock .ct{font-weight:300;letter-spacing:.3em;text-transform:uppercase;font-size:9px;
+    color:#ffd9a0;margin-bottom:.5em}
+  .gmock .truth{font-weight:300;color:#dbe8f8;font-size:13px;line-height:1.5;
+    padding-bottom:1.1em;margin-bottom:1.1em;border-bottom:1px dashed rgba(155,140,255,.25)}
+  .gmock .tl{font-weight:300;letter-spacing:.3em;text-transform:uppercase;font-size:9px;
+    color:#9b8cff;margin-bottom:.7em}
+  .gmock .ev{display:flex;gap:.8em;margin-bottom:.6em;font-size:12px}
+  .gmock .ev .d{color:#6fd6d0;font-family:ui-monospace,monospace;flex:0 0 auto;opacity:.8}
+  .gmock .ev .t{color:#aec5df;font-weight:300;line-height:1.4}
+
+  /* pipeline */
+  .flowwrap{position:absolute;left:0;right:0;top:56vh;display:flex;
+    justify-content:center;padding:0 4vw}
+  .flow{display:flex;align-items:stretch;gap:0;max-width:1180px;width:100%}
+  .stage{flex:1 1 0;position:relative;text-align:center;padding:0 .5vw}
+  .stage .box{background:linear-gradient(160deg,rgba(18,26,52,.66),rgba(8,12,28,.5));
+    border:1px solid rgba(126,246,255,.18);border-radius:14px;padding:1.05em .6em;
+    height:100%;display:flex;flex-direction:column;justify-content:center;
+    backdrop-filter:blur(6px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+  .stage .k{font-weight:300;letter-spacing:.22em;text-transform:uppercase;
+    font-size:clamp(9px,.82vw,12px);color:#eaf3ff;margin-bottom:.4em}
+  .stage .s{font-weight:300;font-size:clamp(9px,.78vw,11px);color:#8fb0d0;line-height:1.4}
+  .stage.core .box{border-color:rgba(255,217,160,.55);
+    background:linear-gradient(160deg,rgba(46,38,20,.55),rgba(20,16,8,.5));
+    box-shadow:0 0 34px rgba(255,217,160,.22),0 16px 40px rgba(0,0,0,.4)}
+  .stage.core .k{color:#ffe6c2}
+  .stage .arr{position:absolute;right:-.55vw;top:50%;transform:translateY(-50%);
+    color:#5f7aa0;font-size:14px;z-index:3}
+  .tag-real{display:inline-block;margin-top:.55em;font-size:8.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:#7ef6ff;border:1px solid rgba(126,246,255,.4);
+    border-radius:20px;padding:.18em .7em}
+  .tag-soon{display:inline-block;margin-top:.55em;font-size:8.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:#9b8cff;border:1px solid rgba(155,140,255,.4);
+    border-radius:20px;padding:.18em .7em}
+  .hitl{position:absolute;left:0;right:0;top:80vh;text-align:center;
+    font-weight:300;letter-spacing:.04em;color:#cdb0d8;font-size:clamp(11px,1.05vw,15px)}
+  .hitl b{color:#ff9ed0;font-weight:400}
+  .hitl .pp{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pink);
+    box-shadow:0 0 12px var(--pink);margin:0 .7em;vertical-align:middle;
+    animation:beat 2.4s ease-in-out infinite}
+
+  /* demo query rows */
+  .qrows{display:flex;flex-direction:column;gap:1.05em;margin-top:2em}
+  .q{display:flex;gap:1.1em;align-items:flex-start;background:rgba(10,16,34,.45);
+    border:1px solid rgba(126,246,255,.14);border-radius:14px;padding:1.1em 1.3em}
+  .q .num{font-weight:200;font-size:clamp(20px,2.1vw,30px);color:#9b8cff;line-height:1;flex:0 0 auto;
+    width:1.3em;text-align:center}
+  .q .qt b{display:block;color:#eaf3ff;font-weight:400;font-style:italic;
+    font-size:clamp(13px,1.25vw,17px);margin-bottom:.22em;letter-spacing:.01em}
+  .q .qt span{font-weight:300;color:#9fb8d4;font-size:clamp(11px,1.05vw,14px);line-height:1.45}
+
+  /* title page — original dido-brain.html overlay */
+  .t0{position:absolute;inset:0;display:flex;flex-direction:column;
+    justify-content:space-between;padding:5.4vh 4.4vw;pointer-events:none}
+  .t0-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .t0-brand{font-weight:200;letter-spacing:.62em;font-size:clamp(26px,3.6vw,52px);
+    background:linear-gradient(90deg,#bfefff 0%,#9b8cff 55%,#ffd9a0 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 40px rgba(123,150,255,.25);animation:breathe 7s ease-in-out infinite}
+  .t0-brand span{margin-left:-.62em}
+  .t0-tag{font-weight:300;letter-spacing:.34em;font-size:clamp(8px,1vw,13px);
+    text-transform:uppercase;color:#8fb6d8;margin-top:1.1em}
+  .t0-meta{text-align:right;font-weight:300;letter-spacing:.26em;font-size:clamp(8px,.85vw,11px);
+    color:#6f8fb6;text-transform:uppercase;line-height:2.1}
+  .t0-meta b{color:#bfe6ff;font-weight:400}
+  .t0-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+  .t0-legend{display:flex;gap:1.8vw}
+  .t0-legend div{font-weight:300;letter-spacing:.2em;font-size:clamp(8px,.82vw,11px);
+    color:#7e9ec0;text-transform:uppercase;display:flex;align-items:center;gap:.6em}
+  .t0-legend .dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 10px currentColor}
+  .t0-state{font-weight:300;letter-spacing:.34em;font-size:clamp(9px,1vw,13px);
+    text-transform:uppercase;color:#a9c8e6;padding-bottom:2.2em}
+  .t0-state b{color:#ffe6c2;font-weight:400}
+
+  /* layout helpers for card placement */
+  .pad{position:absolute;top:18vh;left:6vw;width:min(46vw,640px)}
+  .pad-wide{position:absolute;top:14vh;left:6vw;width:min(54vw,820px)}
+  .center-top{position:absolute;top:9vh;left:50%;transform:translateX(-50%);
+    text-align:center;width:min(80vw,1000px)}
+
+  @keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
+  @keyframes beat{0%,100%{transform:scale(.7);opacity:.55}50%{transform:scale(1.15);opacity:1}}
+
+  @media (max-width:760px){
+    .feat{grid-template-columns:1fr}
+    .pad,.pad-wide{width:84vw;left:8vw;top:14vh}
+    .gmock{display:none}
+    .vp{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg"></canvas>
+  <canvas id="net"></canvas>
+</div>
+<div id="dim"></div>
+
+<!-- ============ PAGES ============ -->
+<div class="pages">
+
+  <!-- 0 · TITLE / OVERVIEW (mirrors original dido-brain.html) -->
+  <section class="page" data-i="0">
+    <div class="t0">
+      <div class="t0-top">
+        <div>
+          <div class="t0-brand">DiDO<span></span></div>
+          <div class="t0-tag">The time-aware org brain · dreaming</div>
+        </div>
+        <div class="t0-meta">
+          Ingesting&nbsp;<b>·</b>&nbsp;Self-wiring&nbsp;<b>·</b>&nbsp;Consolidating<br>
+          memory across time
+        </div>
+      </div>
+      <div class="t0-bottom">
+        <div class="t0-legend">
+          <div><span class="dot" style="color:#7ef6ff"></span>Cowork</div>
+          <div><span class="dot" style="color:#9b8cff"></span>Fellow</div>
+          <div><span class="dot" style="color:#ff9ed0"></span>Slack</div>
+          <div><span class="dot" style="color:#ffd9a0"></span>Cursor</div>
+        </div>
+        <div class="t0-state"><span class="pulse-dot"></span><b id="phase">DREAM CYCLE</b>&nbsp;active</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · PROBLEM -->
+  <section class="page" data-i="1">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>The problem</div>
+      <h1 class="lift big">The team<br>flies <em>blind.</em></h1>
+      <p class="lift lede">Work and decisions don't live in tidy status reports. They live
+        scattered inside individuals' tools — where others can't find them, or even know they exist.</p>
+      <div class="points lift">
+        <div class="pt"><span class="b" style="color:#7ef6ff"></span><div class="tx">
+          <b>Visibility is a privilege</b><span>Reserved for the few in the right rooms. Everyone should be able to function like a leader.</span></div></div>
+        <div class="pt"><span class="b" style="color:#9b8cff"></span><div class="tx">
+          <b>Knowledge is siloed &amp; undiscoverable</b><span>It isn't lost — it's trapped in someone's Fellow, Cowork or Slack, effectively invisible.</span></div></div>
+        <div class="pt"><span class="b" style="color:#ff9ed0"></span><div class="tx">
+          <b>Work is inefficient</b><span>People redo analysis, hunt for context, and decide on partial information.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · SOLUTION -->
+  <section class="page" data-i="2">
+    <div class="pad-wide">
+      <div class="lift eyebrow"><span class="pip"></span>The solution</div>
+      <h1 class="lift big">One brain for<br>the <em>whole team.</em></h1>
+      <p class="lift lede">DiDO ingests the work artifacts scattered across everyone's tools into a
+        time-aware org brain that connects them — and answers natural-language questions, grounded in real sources.</p>
+      <div class="vp lift">
+        <div class="v cy">
+          <div class="k">Value prop 01</div>
+          <h3>Connected knowledge</h3>
+          <p>Unify what's scattered across Fellow, Cowork and Slack into one place anyone can reach. Trapped information becomes discoverable.</p>
+        </div>
+        <div class="v vi">
+          <div class="k">Value prop 02</div>
+          <h3>Democratized transparency</h3>
+          <p>Anyone can ask a question and get a cited answer from real artifacts — so everyone can function like a leader.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · ENGINE: gbrain -->
+  <section class="page" data-i="3">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>The engine</div>
+      <h1 class="lift big">gbrain,<br><em>dreaming.</em></h1>
+      <p class="lift lede">We don't build memory infrastructure — we feed a production-grade open-source brain
+        (Garry Tan / YC) the right data and point queries at it.</p>
+      <div class="feat lift">
+        <div class="f"><span class="ic">◇</span><div><b>Markdown brain in git</b><span>Every fact is human-readable, diffable and auditable.</span></div></div>
+        <div class="f"><span class="ic">◷</span><div><b>Compiled truth + timeline</b><span>Current best understanding on top, append-only dated history below. Nothing is ever destroyed.</span></div></div>
+        <div class="f"><span class="ic">⌘</span><div><b>Self-wiring graph</b><span>Every write extracts entities and typed links — with zero LLM calls. Fast and cheap.</span></div></div>
+        <div class="f"><span class="ic">❝</span><div><b>Cited answers</b><span>Hybrid vector + keyword retrieval returns synthesized answers grounded in source pages.</span></div></div>
+      </div>
+    </div>
+    <div class="gmock lift" style="right:6vw;top:22vh">
+      <div class="fn">people/ryan.md</div>
+      <div class="ct">◆ Compiled truth</div>
+      <div class="truth">Leading the DiDO vertical slice — ingesting Cowork + Fellow into a shared, queryable org brain.</div>
+      <div class="tl">▾ Timeline</div>
+      <div class="ev"><span class="d">06-24</span><span class="t">Chose gbrain over building memory from scratch.</span></div>
+      <div class="ev"><span class="d">06-25</span><span class="t">Decided hermes is out of scope — multi-player, not single-operator.</span></div>
+      <div class="ev"><span class="d">06-25</span><span class="t">Slack human-in-the-loop confirmed as a must-build.</span></div>
+    </div>
+  </section>
+
+  <!-- 4 · ARCHITECTURE / PIPELINE -->
+  <section class="page" data-i="4">
+    <div class="center-top">
+      <div class="lift eyebrow" style="text-align:center"><span class="pip"></span>How it flows</div>
+      <h1 class="lift big" style="font-size:clamp(28px,4.2vw,56px)">Artifacts in. Cited answers out.</h1>
+    </div>
+    <div class="flowwrap lift">
+      <div class="flow">
+        <div class="stage"><div class="box"><div class="k">Inputs</div><div class="s">Cowork · Fellow · Code</div><span class="tag-soon">Cowork + Fellow</span></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">Trigger</div><div class="s">Manual / cron kicks off ingest</div><span class="tag-soon">Manual</span></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">Ingest</div><div class="s">Normalize → gbrain pages</div><span class="tag-real">Real-ish</span></div><div class="arr">▶</div></div>
+        <div class="stage core"><div class="box"><div class="k">gbrain · Dreaming</div><div class="s">Store, self-wire, consolidate across time</div><span class="tag-real">Core · Real</span></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">Outputs</div><div class="s">Synthesized, cited answers</div><span class="tag-real">Real</span></div><div class="arr">▶</div></div>
+        <div class="stage"><div class="box"><div class="k">You ask</div><div class="s">Query the brain directly</div><span class="tag-soon">OPA later</span></div></div>
+      </div>
+    </div>
+    <div class="hitl lift">When the brain hits a gap only a human can fill <span class="pp"></span> it asks
+      <b>Ryan on Slack</b> <span class="pp"></span> folds the answer back into the next dream cycle</div>
+  </section>
+
+  <!-- 5 · DEMO / CLOSING -->
+  <section class="page" data-i="5">
+    <div class="pad">
+      <div class="lift eyebrow"><span class="pip"></span>The demo</div>
+      <h1 class="lift big">What anyone<br>can <em>ask.</em></h1>
+      <div class="qrows lift">
+        <div class="q"><div class="num">1</div><div class="qt">
+          <b>"What's happening with X this week — and what's blocked?"</b>
+          <span>Status synthesized across Cowork sessions + Fellow meetings, even for work you weren't part of.</span></div></div>
+        <div class="q"><div class="num">2</div><div class="qt">
+          <b>"Why did we decide to do X, and what was the reasoning?"</b>
+          <span>The decision trail pulled across a meeting and a work session, with citations.</span></div></div>
+        <div class="q"><div class="num">3</div><div class="qt">
+          <b>"What do we know about this project or topic?"</b>
+          <span>Knowledge sitting in someone else's tools that you'd otherwise never find.</span></div></div>
+      </div>
+      <p class="lift lede" style="margin-top:1.6em;color:#bdd6ee">Real gbrain. A real Slack human-in-the-loop.
+        A grounded foundation to keep building — from one person's data to the whole company.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ CHROME ============ -->
+<div class="chrome">
+  <div class="brandmini" id="brandmini">DiDO<span></span></div>
+  <div class="dots" id="dots"></div>
+  <div class="navhint">← →</div>
+  <div class="counter"><b id="cur">01</b> / <span id="tot">06</span></div>
+</div>
+
+<script>
+/* ================= CANVAS ENGINE (persistent, adaptive) ================= */
+const bg = document.getElementById('bg');
+const net = document.getElementById('net');
+const bx = bg.getContext('2d');
+const ctx = net.getContext('2d');
+
+let W,H,DPR,SCALE;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 1.5);   // cap retina overdraw
+  W = window.innerWidth; H = window.innerHeight;
+  [bg,net].forEach(c=>{c.width=W*DPR;c.height=H*DPR;});
+  [bx,ctx].forEach(c=>{c.setTransform(DPR,0,0,DPR,0,0);});
+  SCALE = Math.min(W,H);
+  buildBrain();
+  drawBackground();
+}
+
+const SRC = [
+  {name:'Cowork', col:[126,246,255]},
+  {name:'Fellow', col:[155,140,255]},
+  {name:'Slack',  col:[255,158,208]},
+  {name:'Cursor', col:[255,217,160]},
+];
+// problem scene: collapse into 3 sparse silo clusters, all kept to the RIGHT side
+// (offsets are in normalized brain coords, relative to the brain centre which the
+//  problem scene parks on the right of the screen) so the left stays clean for text.
+const CLUSTERS = [
+  {x:-0.14, y:-0.42, src:0}, // Cowork
+  {x: 0.20, y:-0.02, src:1}, // Fellow
+  {x:-0.08, y: 0.40, src:2}, // Slack
+];
+
+/* ---------- static ethereal background ---------- */
+let stars=[];
+function seedStars(){
+  stars=[];
+  const n = Math.round((W*H)/9000);
+  for(let i=0;i<n;i++){
+    stars.push({x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*1.3+.2, a:Math.random()*.5+.15,
+      tw:Math.random()*Math.PI*2, ts:Math.random()*.8+.3});
+  }
+}
+function drawBackground(){
+  let g = bx.createRadialGradient(W/2,H*0.46,0,W/2,H/2,SCALE*0.95);
+  g.addColorStop(0,'#10183a');
+  g.addColorStop(.35,'#0a0f24');
+  g.addColorStop(1,'#04060f');
+  bx.fillStyle=g; bx.fillRect(0,0,W,H);
+  bx.globalCompositeOperation='lighter';
+  const veils=[
+    {x:W/2-SCALE*.22,y:H/2-SCALE*.12,r:SCALE*.5,c:'rgba(80,90,220,0.10)'},
+    {x:W/2+SCALE*.24,y:H/2+SCALE*.05,r:SCALE*.5,c:'rgba(40,200,200,0.08)'},
+    {x:W/2,y:H/2-SCALE*.3,r:SCALE*.45,c:'rgba(255,200,140,0.05)'},
+  ];
+  veils.forEach(v=>{
+    let vg=bx.createRadialGradient(v.x,v.y,0,v.x,v.y,v.r);
+    vg.addColorStop(0,v.c); vg.addColorStop(1,'rgba(0,0,0,0)');
+    bx.fillStyle=vg; bx.fillRect(0,0,W,H);
+  });
+  bx.globalCompositeOperation='source-over';
+  seedStars();
+}
+
+/* ---------- brain shape mask ---------- */
+function inBrain(nx,ny){
+  const ax=0.40, ay=0.30, offx=0.205;
+  const wob = 1 + 0.10*Math.sin((Math.atan2(ny,nx))*6) + 0.05*Math.sin(ny*22);
+  const dl = ((nx+offx)/(ax*wob))**2 + (ny/(ay*wob))**2;
+  const dr = ((nx-offx)/(ax*wob))**2 + (ny/(ay*wob))**2;
+  const inside = dl<1 || dr<1;
+  const fissure = Math.abs(nx) < (0.022 + 0.018*Math.cos(ny*9)) && Math.abs(ny)<0.27;
+  const stem = (nx*nx)/(0.05**2) + ((ny-0.30)/0.10)**2 < 1;
+  return (inside && !fissure) || stem;
+}
+
+let nodes=[], edges=[], pulses=[], motes=[], waves=[], ripples=[];
+function buildBrain(){
+  nodes=[]; edges=[];
+  const target = Math.round(Math.min(260, Math.max(170, (W*H)/7000)));
+  let guard=0;
+  while(nodes.length<target && guard<target*60){
+    guard++;
+    const nx=(Math.random()*2-1)*0.55;
+    const ny=(Math.random()*2-1)*0.45;
+    if(!inBrain(nx,ny)) continue;
+    // assign to one of 3 clusters by vertical band so the scatter reads organically
+    const cl = ny<-0.13 ? 0 : (ny>0.13 ? 2 : 1);
+    const jx=(Math.random()*2-1)*0.085, jy=(Math.random()*2-1)*0.08;
+    nodes.push({
+      bx:nx, by:ny,
+      sx:CLUSTERS[cl].x+jx, sy:CLUSTERS[cl].y+jy, cl,
+      keep: Math.random()<0.34,        // only ~1/3 survive the scatter → sparse silos
+      // base screen pos (centred) used only for edge distance calc
+      ex:W/2+nx*SCALE*0.92, ey:H/2+ny*SCALE*0.92,
+      x:0,y:0,
+      base:Math.random()*0.4+0.25, glow:0,
+      r:Math.random()*1.4+1.1, ph:Math.random()*Math.PI*2,
+      hue: Math.random(),
+    });
+  }
+  const maxD = SCALE*0.072, maxDeg=4;
+  const deg=new Array(nodes.length).fill(0);
+  for(let i=0;i<nodes.length;i++){
+    let cands=[];
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].ex-nodes[j].ex, dy=nodes[i].ey-nodes[j].ey;
+      const d=Math.hypot(dx,dy);
+      if(d<maxD) cands.push([d,j]);
+    }
+    cands.sort((a,b)=>a[0]-b[0]);
+    for(const [d,j] of cands){
+      if(deg[i]>=maxDeg) break;
+      if(deg[j]>=maxDeg) continue;
+      edges.push({a:i,b:j,d, same: nodes[i].cl===nodes[j].cl});
+      deg[i]++; deg[j]++;
+    }
+  }
+}
+
+/* ---------- camera + scene state ---------- */
+const cam   = {cx:0.5, cy:0.5, scale:1.0};
+const camT  = {cx:0.5, cy:0.5, scale:1.0};
+let scatter=0, scatterT=0;     // 0 = brain, 1 = siloed islands
+let waveRate=6200, moteRate=900;
+
+// per-scene directives
+const SCENES = [
+  {cx:.50, cy:.50, scale:1.00, scatter:0, dim:0.00, waveRate:6200, moteRate:850},  // title
+  {cx:.74, cy:.52, scale:.60, scatter:1, dim:0.16, waveRate:9000, moteRate:1700}, // problem (silos parked right)
+  {cx:.70, cy:.54, scale:.94, scatter:0, dim:0.34, waveRate:3200, moteRate:380},  // solution (heavy ingest)
+  {cx:.74, cy:.55, scale:.86, scatter:0, dim:0.40, waveRate:2200, moteRate:1100}, // gbrain (heavy dreaming)
+  {cx:.50, cy:.20, scale:.42, scatter:0, dim:0.46, waveRate:5200, moteRate:900},  // architecture
+  {cx:.70, cy:.52, scale:.92, scatter:0, dim:0.40, waveRate:4200, moteRate:600},  // demo
+];
+
+/* ---------- dynamic elements ---------- */
+function spawnPulse(){
+  if(!edges.length) return;
+  const e = edges[(Math.random()*edges.length)|0];
+  const dir = Math.random()<.5;
+  pulses.push({e, t:0, sp:0.6+Math.random()*0.9, dir,
+    col: Math.random()<.5?[126,246,255]:[155,140,255]});
+}
+function spawnMote(){
+  const s = SRC[(Math.random()*SRC.length)|0];
+  const side=(Math.random()*4)|0;
+  let x,y; const m=SCALE*0.12;
+  if(side===0){x=-m;y=Math.random()*H;}
+  else if(side===1){x=W+m;y=Math.random()*H;}
+  else if(side===2){x=Math.random()*W;y=-m;}
+  else{x=Math.random()*W;y=H+m;}
+  const tgt = nodes[(Math.random()*nodes.length)|0];
+  motes.push({sx:x,sy:y,tgt,t:0, sp:0.18+Math.random()*0.12,
+    col:s.col, name:s.name, trail:[]});
+}
+let lastWave=-99;
+function spawnWave(now,bcx,bcy){ waves.push({t:0, r0:SCALE*0.02, x:bcx, y:bcy}); lastWave=now; }
+function ripple(x,y,col){ ripples.push({x,y,t:0,col}); }
+
+/* ---------- render loop ---------- */
+let t0=performance.now();
+let lastPulse=0, lastMote=0, lastWaveT=0;
+
+// --- perf: cap framerate + pause when window is hidden/unfocused ---
+let lastDraw=0, paused=false;
+const FRAME_MS=1000/40;           // ~40fps is plenty for an ambient scene
+function frame(now){
+  requestAnimationFrame(frame);
+  if(paused || now-lastDraw < FRAME_MS) return;
+  lastDraw=now;
+  const time=(now-t0)/1000;
+
+  // ease camera + scatter toward targets
+  cam.cx += (camT.cx-cam.cx)*0.055;
+  cam.cy += (camT.cy-cam.cy)*0.055;
+  cam.scale += (camT.scale-cam.scale)*0.055;
+  scatter += (scatterT-scatter)*0.05;
+
+  const Scam = SCALE*0.92*cam.scale;
+  const bcx = W*cam.cx, bcy = H*cam.cy + Scam*0.011;
+
+  // resolve node screen positions from brain<->silo blend
+  for(const nd of nodes){
+    const gx = nd.bx + (nd.sx-nd.bx)*scatter;
+    const gy = nd.by + (nd.sy-nd.by)*scatter;
+    nd.x = bcx + gx*Scam;
+    nd.y = bcy + gy*Scam;
+  }
+
+  ctx.clearRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+
+  // twinkle stars
+  for(const s of stars){
+    const a=s.a*(0.6+0.4*Math.sin(time*s.ts+s.tw));
+    ctx.fillStyle=`rgba(200,220,255,${a})`;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+  }
+
+  // spawn cadence (scene-tunable)
+  if(now-lastPulse>120){ spawnPulse(); if(Math.random()<.4) spawnPulse(); lastPulse=now; }
+  if(now-lastMote>moteRate){ spawnMote(); lastMote=now; }
+  if(now-lastWaveT>waveRate){ spawnWave(now,bcx,bcy); lastWaveT=now; }
+
+  // dream waves
+  const maxR=SCALE*0.62;
+  for(let i=waves.length-1;i>=0;i--){
+    const wv=waves[i]; wv.t+=0.0045;
+    const r=wv.r0+wv.t*maxR; const fade=1-wv.t;
+    if(wv.t>=1){waves.splice(i,1);continue;}
+    ctx.strokeStyle=`rgba(150,200,255,${0.12*fade})`; ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(wv.x,wv.y,r,0,7);ctx.stroke();
+    ctx.strokeStyle=`rgba(255,220,170,${0.07*fade})`; ctx.lineWidth=6;
+    ctx.beginPath();ctx.arc(wv.x,wv.y,r,0,7);ctx.stroke();
+    const band=SCALE*0.05;
+    for(const nd of nodes){
+      const dd=Math.hypot(nd.x-wv.x,nd.y-wv.y);
+      if(Math.abs(dd-r)<band){ nd.glow=Math.max(nd.glow, fade*0.9); }
+    }
+  }
+
+  // edges — connections break apart as nodes scatter
+  for(const e of edges){
+    const a=nodes[e.a], b=nodes[e.b];
+    const lum=(a.glow+b.glow)*0.5;
+    let baseA=0.05+0.10*lum;
+    if(!e.same) baseA *= (1-scatter);       // cross-silo links vanish when scattered
+    else baseA *= (1-0.35*scatter);
+    // also fade with the visibility of the (sparse) endpoints
+    baseA *= (1-scatter*(a.keep?0:1)) * (1-scatter*(b.keep?0:1));
+    if(baseA<0.004) continue;
+    ctx.strokeStyle=`rgba(120,180,230,${baseA})`;
+    ctx.lineWidth=0.6+lum*1.2;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  }
+
+  // silo labels appear above each right-side cluster when scattered
+  if(scatter>0.35){
+    ctx.globalCompositeOperation='source-over';
+    const la=Math.min(1,(scatter-0.35)/0.5);
+    ctx.font='300 13px Helvetica Neue, sans-serif';
+    ctx.textAlign='center';
+    for(const c of CLUSTERS){
+      const lx=bcx+c.x*Scam, ly=bcy+c.y*Scam - Scam*0.24;
+      const [r,g,bl]=SRC[c.src].col;
+      ctx.fillStyle=`rgba(${r},${g},${bl},${0.82*la})`;
+      ctx.fillText(SRC[c.src].name.toUpperCase(), lx, ly);
+    }
+    ctx.globalCompositeOperation='lighter';
+  }
+
+  // pulses
+  for(let i=pulses.length-1;i>=0;i--){
+    const p=pulses[i]; p.t+=0.016*p.sp;
+    if(p.t>=1){ const end=p.dir?nodes[p.e.b]:nodes[p.e.a]; end.glow=Math.min(1.4,end.glow+0.8); pulses.splice(i,1);continue; }
+    const a=nodes[p.e.a], b=nodes[p.e.b];
+    const tt=p.dir?p.t:1-p.t;
+    const x=a.x+(b.x-a.x)*tt, y=a.y+(b.y-a.y)*tt;
+    const [r,gc,bl]=p.col;
+    for(let k=0;k<5;k++){
+      const tk=tt-(p.dir?1:-1)*k*0.012;
+      if(tk<0||tk>1)continue;
+      const xx=a.x+(b.x-a.x)*tk, yy=a.y+(b.y-a.y)*tk;
+      const al=(1-k/5)*0.5;
+      ctx.fillStyle=`rgba(${r},${gc},${bl},${al})`;
+      ctx.beginPath();ctx.arc(xx,yy,2.2-k*0.3,0,7);ctx.fill();
+    }
+    // soft additive halo (replaces expensive shadowBlur)
+    ctx.fillStyle=`rgba(${r},${gc},${bl},0.22)`;
+    ctx.beginPath();ctx.arc(x,y,6,0,7);ctx.fill();
+    ctx.fillStyle=`rgba(${r},${gc},${bl},0.95)`;
+    ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fill();
+  }
+
+  // knowledge motes ingested from siloed tools
+  for(let i=motes.length-1;i>=0;i--){
+    const m=motes[i]; m.t+=0.01*m.sp;
+    const e=1-Math.pow(1-Math.min(m.t,1),3);
+    const tx=m.tgt.x, ty=m.tgt.y;
+    m.x=m.sx+(tx-m.sx)*e; m.y=m.sy+(ty-m.sy)*e;
+    m.trail.push([m.x,m.y]); if(m.trail.length>16)m.trail.shift();
+    const [r,g,b]=m.col;
+    for(let k=0;k<m.trail.length;k++){
+      const al=(k/m.trail.length)*0.45;
+      ctx.fillStyle=`rgba(${r},${g},${b},${al})`;
+      ctx.beginPath();ctx.arc(m.trail[k][0],m.trail[k][1],1.6*(k/m.trail.length)+0.4,0,7);ctx.fill();
+    }
+    // soft additive halo (replaces expensive shadowBlur)
+    ctx.fillStyle=`rgba(${r},${g},${b},0.20)`;
+    ctx.beginPath();ctx.arc(m.x,m.y,8,0,7);ctx.fill();
+    ctx.fillStyle=`rgba(${r},${g},${b},0.95)`;
+    ctx.beginPath();ctx.arc(m.x,m.y,3,0,7);ctx.fill();
+    if(m.t<0.55){
+      ctx.globalCompositeOperation='source-over';
+      ctx.font='300 10px Helvetica Neue, sans-serif';
+      ctx.fillStyle=`rgba(${r},${g},${b},${0.5*(1-m.t/0.55)})`;
+      ctx.textAlign='center';
+      ctx.fillText(m.name.toUpperCase(), m.x, m.y-9);
+      ctx.globalCompositeOperation='lighter';
+    }
+    if(m.t>=1){ m.tgt.glow=1.4; ripple(tx,ty,m.col); spawnPulse(); motes.splice(i,1); }
+  }
+
+  // absorption ripples
+  for(let i=ripples.length-1;i>=0;i--){
+    const rp=ripples[i]; rp.t+=0.03;
+    if(rp.t>=1){ripples.splice(i,1);continue;}
+    const [r,g,b]=rp.col;
+    ctx.strokeStyle=`rgba(${r},${g},${b},${0.6*(1-rp.t)})`;
+    ctx.lineWidth=1.5*(1-rp.t)+0.3;
+    ctx.beginPath();ctx.arc(rp.x,rp.y,2+rp.t*22,0,7);ctx.stroke();
+  }
+
+  // nodes
+  for(const nd of nodes){
+    nd.glow*=0.94;
+    // sparse fade: only "keep" nodes survive the scatter, so silos stay light
+    const va = 1 - scatter*(nd.keep?0:1);
+    if(va<0.02) continue;
+    const tw=0.5+0.5*Math.sin(time*1.3+nd.ph);
+    const b = nd.base*(0.6+0.4*tw)+nd.glow;
+    const r=Math.round(126+(165-126)*nd.hue);
+    const g=Math.round(246+(150-246)*nd.hue);
+    const bl=255; const rad=nd.r*(1+nd.glow*1.1);
+    ctx.fillStyle=`rgba(${r},${g},${bl},${Math.min(0.9,0.18*b)*va})`;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,rad*3.2,0,7);ctx.fill();
+    ctx.fillStyle=`rgba(${Math.min(255,r+60)},${Math.min(255,g+10)},255,${Math.min(1,0.5+b)*va})`;
+    ctx.beginPath();ctx.arc(nd.x,nd.y,rad,0,7);ctx.fill();
+  }
+
+  // breathing heart glow at brain centre
+  const beat=0.5+0.5*Math.sin(time*0.9);
+  const hg=ctx.createRadialGradient(bcx,bcy,0,bcx,bcy,Scam*0.32);
+  hg.addColorStop(0,`rgba(150,170,255,${(0.05+0.04*beat)*(1-scatter*0.7)})`);
+  hg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=hg;ctx.beginPath();ctx.arc(bcx,bcy,Scam*0.32,0,7);ctx.fill();
+
+  ctx.globalCompositeOperation='source-over';
+  // filmic vignette
+  const vg=ctx.createRadialGradient(W/2,H/2,SCALE*0.3,W/2,H/2,SCALE*0.82);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(2,4,12,0.55)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+}
+
+// stop rendering work when the deck isn't in view / focused
+function setPaused(p){ paused=p; if(!p) lastDraw=0; }
+window.addEventListener('blur',()=>setPaused(true));
+window.addEventListener('focus',()=>setPaused(false));
+document.addEventListener('visibilitychange',()=>setPaused(document.hidden));
+
+/* ================= SLIDE / SCENE NAVIGATION ================= */
+const pageEls = [...document.querySelectorAll('.page')];
+const N = pageEls.length;
+const dimEl = document.getElementById('dim');
+const brandmini = document.getElementById('brandmini');
+const curEl = document.getElementById('cur');
+const dotsEl = document.getElementById('dots');
+let idx = 0;
+
+// build dots
+pageEls.forEach((_,i)=>{
+  const d=document.createElement('i');
+  d.addEventListener('click',()=>go(i));
+  dotsEl.appendChild(d);
+});
+const dotEls=[...dotsEl.children];
+document.getElementById('tot').textContent=String(N).padStart(2,'0');
+
+function applyScene(i){
+  const s=SCENES[Math.min(i,SCENES.length-1)];
+  camT.cx=s.cx; camT.cy=s.cy; camT.scale=s.scale;
+  scatterT=s.scatter; waveRate=s.waveRate; moteRate=s.moteRate;
+  dimEl.style.opacity=s.dim;
+  brandmini.style.opacity = i===0 ? 0 : 1;
+  document.body.classList.toggle('cover', i===0); // hide nav counter on title
+}
+
+// cycle the DREAM CYCLE state label on the title page
+const phaseEl=document.getElementById('phase');
+const phases=['DREAM CYCLE','CONSOLIDATING','SELF-WIRING','TIME-AWARE RECALL'];
+let pIdx=0;
+setInterval(()=>{ pIdx=(pIdx+1)%phases.length; if(phaseEl) phaseEl.textContent=phases[pIdx]; },4200);
+
+function go(i){
+  i=Math.max(0,Math.min(N-1,i));
+  if(i===idx) return;
+  pageEls[idx].classList.remove('active');
+  idx=i;
+  pageEls[idx].classList.add('active');
+  dotEls.forEach((d,k)=>d.classList.toggle('on',k===idx));
+  curEl.textContent=String(idx+1).padStart(2,'0');
+  applyScene(idx);
+}
+function next(){ go(idx+1); }
+function prev(){ go(idx-1); }
+
+window.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){ e.preventDefault(); next(); }
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){ e.preventDefault(); prev(); }
+  else if(e.key==='Home'){ go(0); }
+  else if(e.key==='End'){ go(N-1); }
+});
+// click right half = forward, left half = back
+window.addEventListener('click',e=>{
+  if(e.target.closest('.dots')||e.target.closest('a')) return;
+  if(e.clientX > W*0.32) next(); else prev();
+});
+// touch swipe
+let tsx=0;
+window.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;},{passive:true});
+window.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tsx;
+  if(dx<-40) next(); else if(dx>40) prev();
+},{passive:true});
+
+window.addEventListener('resize', ()=>{clearTimeout(window._rz);window._rz=setTimeout(resize,150);});
+
+resize();
+applyScene(0);
+pageEls[0].classList.add('active');
+dotEls[0].classList.add('on');
+// pre-stage atmosphere
+spawnWave(performance.now(), W/2, H/2);
+for(let i=0;i<3;i++) spawnMote();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
