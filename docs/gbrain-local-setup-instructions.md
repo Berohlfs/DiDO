@@ -1,11 +1,22 @@
-# Step by step (MVP)
+# Local setup - Step by step instructions
 
 1. [[CANCELLED - SINGLEPLAYER]] Deployed Hermes on Railway [here](https://github.com/praveen-ks-2001/hermes-agent-template).
 2. Init Supabase project
 3. Add pgvector extension to db (public schema)
-4. Installed bun: `curl -fsSL https://bun.sh/install | bash`
+4. Issued Anthropic and OpenAI API keys
 
-## Install Bun
+## Install Bun and GBrain deps
+
+```
+curl -fsSL https://bun.sh/install | bash
+
+echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.zshrc
+echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+bun --version
+which bun
+```
 
 ```
 cd /Users/berohlfs/Documents/GitHub/dido/gbrain
