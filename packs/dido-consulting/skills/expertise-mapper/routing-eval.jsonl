@@ -1,0 +1,5 @@
+{"intent":"who knows about this scheduling problem","expected_skill":"expertise-mapper"}
+{"intent":"who has worked on AI model selection","expected_skill":"expertise-mapper"}
+{"intent":"find an expert on this topic","expected_skill":"expertise-mapper"}
+{"intent":"who's done this before at Sierra","expected_skill":"expertise-mapper"}
+{"intent":"who should I ask about lesson plan generation","expected_skill":"expertise-mapper"}

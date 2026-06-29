@@ -1,0 +1,5 @@
+{"intent":"find a deliverable about onboarding","expected_skill":"deliverable-reuse"}
+{"intent":"have we made this before","expected_skill":"deliverable-reuse"}
+{"intent":"reuse a deck from a past engagement","expected_skill":"deliverable-reuse"}
+{"intent":"similar deliverables to this scope of work","expected_skill":"deliverable-reuse"}
+{"intent":"reuse a memo we wrote for another client","expected_skill":"deliverable-reuse"}

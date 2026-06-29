@@ -85,7 +85,12 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
   decisions: none — covered by ADR-002 (dedupe boundary + explicit-link-on-write + infer-first)
   finalSeedState: decisions/2025-07-14-default-ai-model updated (Alternatives/Outcome=TBD + approved_by edge); ZERO pages added; all seed pages coherent for 513.
   NOTES FOR 513: skillpack.json now 6 skills/6 routing_evals, CHANGELOG/version 0.2.0, judge 6 cases. 18 trigger phrases taken (meeting-prep/risk-review/decision-log) — 513 must stay MECE-unique. decision-log is first mutating skill; write paths must `gbrain link` after `gbrain put` (auto_links=0 reproduced).
-- BLU-513: TODO  (wave 4, opus, authoring, has-new-ui: false)
+- BLU-513: DONE  (wave 4, opus, authoring, has-new-ui: false) — pack now 10 skills, v0.3.0
+  gates: (1) doctor → ★ 10/10 [endorsed], 10 skills, MECE triggers. (2) Opportunity Finder surfaces opportunities/florida-district (expansion, abstudios), cited. Expertise Mapper wraps real `gbrain whoknows scheduling` → Scott Wayman 0.306, Andrew Willett 0.287, shaped with WHY + gap-flags thin expertise coverage. Deliverable Reuse gap-flags (no deliverable pages) without surfacing a note as a deliverable. Proposal Writer drafts grounded in decisions, marked DRAFT, gap-flags missing prior deliverables.
+  files: packs/dido-consulting/skills/{opportunity-finder,proposal-writer,deliverable-reuse,expertise-mapper}/{SKILL.md,routing-eval.jsonl}, skillpack.json (10 skills/10 routing_evals, v0.2.0→0.3.0), CHANGELOG.md (## [0.3.0]), evals/dido-consulting.judge.json (+4 = 10 cases)
+  decisions: none — covered by ADR-001 (expert_routing scope) + ADR-004 (skillpack read-path)
+  finalSeedState: unchanged — 24 pages, read-only skills wrote nothing.
+  NOTE FOR 519: read skills point at materialized backlinks + whoknows; they light up further once the shared brain carries real deliverable/expertise/opportunity pages.
 - BLU-519: TODO  (wave 5, opus, authoring, has-new-ui: false) — targets SHARED brain, no GBRAIN_HOME
 
 ## Open questions / escalations

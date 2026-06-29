@@ -1,8 +1,8 @@
 {
   "api_version": "gbrain-skillpack-v1",
   "name": "dido-consulting",
-  "version": "0.2.0",
-  "description": "Account, engagement, meeting, risk, and decision skills for Sierra Studio's consulting brain: client brief, weekly account health, executive summary, meeting prep, risk review, decision log.",
+  "version": "0.3.0",
+  "description": "Account, engagement, meeting, risk, decision, growth, and reuse skills for Sierra Studio's consulting brain: client brief, weekly account health, executive summary, meeting prep, risk review, decision log, opportunity finder, proposal writer, deliverable reuse, expertise mapper.",
   "author": "Sierra Studio <brain@sierra.studio>",
   "license": "MIT",
   "homepage": "https://github.com/Berohlfs/DiDO/tree/main/packs/dido-consulting",
@@ -14,7 +14,11 @@
     "skills/executive-summary",
     "skills/meeting-prep",
     "skills/risk-review",
-    "skills/decision-log"
+    "skills/decision-log",
+    "skills/opportunity-finder",
+    "skills/proposal-writer",
+    "skills/deliverable-reuse",
+    "skills/expertise-mapper"
   ],
   "runbooks": {
     "bootstrap": "runbooks/bootstrap.md"
@@ -35,6 +39,10 @@
     "skills/executive-summary/routing-eval.jsonl",
     "skills/meeting-prep/routing-eval.jsonl",
     "skills/risk-review/routing-eval.jsonl",
-    "skills/decision-log/routing-eval.jsonl"
+    "skills/decision-log/routing-eval.jsonl",
+    "skills/opportunity-finder/routing-eval.jsonl",
+    "skills/proposal-writer/routing-eval.jsonl",
+    "skills/deliverable-reuse/routing-eval.jsonl",
+    "skills/expertise-mapper/routing-eval.jsonl"
   ]
 }

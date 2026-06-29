@@ -25,6 +25,22 @@
     {
       "name": "decision-log capture — write-then-link, dedupe vs enrich",
       "criteria": "Capture records what was decided, rationale, alternatives, and outcome (TBD) cited to a meeting/session, then materializes the decision's edges (owned_by, and requested_by/approved_by when known) explicitly with gbrain link since frontmatter does not auto-materialize. When a decision for the same engagement + title/date already exists (enrich-filed), the existing page is updated, not duplicated."
+    },
+    {
+      "name": "opportunity-finder — renewals, expansions, and flagged new signals",
+      "criteria": "Output buckets recorded opportunities into renewals (client, timing, status) and expansions (client, rationale, status), surfacing the seeded expansion opportunities/florida-district against clients/abstudios with its status. New opportunity signals inferred from recent meetings are proposed with rationale and a cited source meeting, flagged for confirmation, never silently filed, and not duplicating a recorded opportunity. Missing timing is gap-flagged, not invented."
+    },
+    {
+      "name": "proposal-writer — draft grounded in cited past work, never filed",
+      "criteria": "Output is a proposal DRAFT (explicitly not filed to the brain) covering understanding/context, proposed approach, relevant experience, scope & deliverables, and next steps. Every claim that reuses past work cites a real source slug (deliverables/, engagements/, decisions/). When no analogous deliverable exists in the thin seed, that gap is flagged and the approach is drawn from the engagement record rather than a fabricated case study. Newly proposed scope and suggested team are flagged for human confirmation."
+    },
+    {
+      "name": "deliverable-reuse — ranked, cited, gap-flags empty results",
+      "criteria": "Output is a ranked list of reusable deliverables/assets with title, client/engagement, date, what it is, why relevant, and a link to the source slug. Only type:deliverable/asset pages qualify (a note, meeting, or decision is never surfaced as a deliverable). When the thin seed holds no matching deliverable, the empty result is gap-flagged with what was searched rather than fabricated."
+    },
+    {
+      "name": "expertise-mapper — wraps find_experts/whoknows, gap-flags thin coverage",
+      "criteria": "Output is a ranked candidate list sourced from the built-in find_experts op (gbrain whoknows) and does not re-rank or name anyone the op did not return. Each candidate carries a WHY citing a linking engagement/meeting/decision slug traced via backlinks. When the seed yields only low-scoring stakeholders or no candidates, the op is still run and the thin/empty result is gap-flagged, not padded with fabricated experts."
     }
   ]
 }

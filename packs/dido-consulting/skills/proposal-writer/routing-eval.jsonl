@@ -1,0 +1,5 @@
+{"intent":"draft a proposal for this client","expected_skill":"proposal-writer"}
+{"intent":"proposal for this client based on our past work","expected_skill":"proposal-writer"}
+{"intent":"write a proposal for the Florida district deal","expected_skill":"proposal-writer"}
+{"intent":"put together a proposal grounded in similar engagements","expected_skill":"proposal-writer"}
+{"intent":"draft a statement of work for ABStudios","expected_skill":"proposal-writer"}
