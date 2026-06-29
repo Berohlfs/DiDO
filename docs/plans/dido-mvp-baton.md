@@ -63,7 +63,13 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
   decisions: ADR-002 (infer-first + ask-when-stuck, no numeric gate, rationale-note git-diff auditability, status:open = 509 contract, explicit-gbrain-link edge materialization, enrich-vs-512 dedupe)
   NOTES FOR 509: read `status: open` from engagements/abstudios-sierra and opportunities/florida-district (both stamped). Enumerate engagements/opportunities then read frontmatter status (filter path still TBD per plan — query/search --types). client.status is 509's to derive.
   NOTES FOR 511/512/513: typed slugs available to query on the validation brain — clients/abstudios, engagements/abstudios-sierra, meetings/2025-{03-12,04-02,07-14,08-08,10-03}-abstudios-sierra, decisions/2025-03-12-scheduling-separate-tab, decisions/2025-07-14-default-ai-model, risks/billing-cost-overrun, opportunities/florida-district, people/stakeholders/{scott-wayman,andrew-willett}, people/{ryan-ramirez,guilherme-garibaldi}. To materialize any new pack edge, stamp frontmatter AND `gbrain link` the verb (see packs/dido-engagement/enrich/filing-rules.md).
-- BLU-509: TODO  (wave 3, opus, authoring, has-new-ui: false)
+- BLU-509: DONE  (wave 3, opus, authoring, has-new-ui: false)
+  gates: all 4 green. (1) derive → clients/abstudios `status: Active` (engagement open). (2) flip engagement open→closed → Past; restored to open → Active. (3) `status_override: Past` → SKIPPED, override stands; removed → re-derives Active. (4) filter-by-status command confirmed (enumerate `gbrain list --type client` then read `status:` via `gbrain get` — no frontmatter predicate exists; query/search are semantic).
+  files: packs/dido-engagement/lifecycle-status/SKILL.md (dido-client-lifecycle-status derivation skill), docs/adr/ADR-003-client-lifecycle-derivation.md
+  reused: enrich SKILL.md shape; backlinks traversal; ADR-001/002 findings
+  decisions: ADR-003 (precedence Active>Past>Prospect>Lost; status vs status_override; skill-not-dream-phase = closed CyclePhase union; enumerate-then-read filter)
+  finalSeedState: abstudios = Active, no override, engagement abstudios-sierra restored to `status: open`, opportunity florida-district `status: open`. Known-good for 511/512/513.
+  NOTES FOR 511: client lifecycle in `status:` frontmatter on client pages; values exactly Active|Past|Prospect|Lost or unset; `status_override:` is the effective status when present. Enumerate a client's engagements/opportunities via `gbrain backlinks clients/<slug>` (client_of=engagements, expansion_for/renewal_for=opportunities), NOT frontmatter walking. SLICE NOW PROVEN end-to-end (508→510→509); next slice proof = Client Brief (511) returns a cited answer.
 - BLU-511: TODO  (wave 4, opus, authoring, has-new-ui: false)
 - BLU-512: TODO  (wave 4, opus, authoring, has-new-ui: false)
 - BLU-513: TODO  (wave 4, opus, authoring, has-new-ui: false)
