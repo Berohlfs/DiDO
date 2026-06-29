@@ -42,7 +42,14 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
 - P2 Brief: done → docs/research/dido-mvp-brief.md. Key corrections for builders: `gbrain_min_version` 3/4-part (0.42 fails, use 0.42.0); `primitive` is closed 5-enum; pack `frontmatter_links` `{page_type,fields,link_type}` has NO inverse and NO direction (edge always declaring→referenced, reverse via backlinks); doctor needs BOTH `routing-eval.jsonl` (≥5) AND `evals/*.judge.json` (≥3); `type:` frontmatter beats slug prefix; `sync --apply` defaults to DRY-RUN (must pass --apply); CyclePhase is a closed 22-member union → 509 must be a skill. Edge-direction checkpoint: `gbrain graph engagements/<slug> --depth 1` + `gbrain backlinks clients/<slug>`.
 
 ## Ticket log (mirrors the tracker, kept terse)
-- BLU-508: TODO  (wave 1, opus, authoring, has-new-ui: false)
+- BLU-508: DONE  (wave 1, opus, authoring, has-new-ui: false)
+  gates: validate→green, lint --with-db→green, use→active, sync --apply→green (would_apply=0, prefixes dead until 510 enriches — expected), explain→green
+  files: packs/dido-engagement/dido-engagement.yaml (pack source), packs/dido-engagement/README.md (runbook), docs/adr/ADR-001-dido-engagement-ontology.md
+  reused: gbrain-base (extends); brief's confirmed manifest shape
+  net-new: hand-authored pack.yaml (fork output had wrong extends:null shape); `meeting` redeclared locally (lint validates frontmatter_links.page_type against on-disk child manifest, not extends-merged set)
+  decisions: ADR-001 (expert_in originates on stakeholder not person — person is non-routed/inert; documented deviation)
+  tests: n/a — gates (all 5 green, exit 0)
+  NOTES FOR 510: frontmatter fields to stamp — engagement `client:`; deliverable/decision/risk/meeting `engagement:`; decision `requested_by:`/`approved_by:`; deliverable `requested_by:`; `depends_on:`; `blocked_by:`; stakeholder `expert_in:`; opportunity `renewal_for:`/`expansion_for:`. File stakeholders under `people/stakeholders/` OR stamp `type: stakeholder` (type frontmatter beats prefix; base `person` is a superset prefix). Edge-direction proof: file `engagements/<slug>` with `client: clients/<slug>`, then `gbrain graph engagements/<slug> --depth 1` shows `engagement --client_of--> client`; `gbrain backlinks clients/<slug>` lists the engagement. `gbrain schema review-orphans` errors (`relation "pages" does not exist`) in this pglite brain — experimental, NOT a gate; use `gbrain stats`.
 - BLU-510: TODO  (wave 2, opus, authoring, has-new-ui: false)
 - BLU-509: TODO  (wave 3, opus, authoring, has-new-ui: false)
 - BLU-511: TODO  (wave 4, opus, authoring, has-new-ui: false)
