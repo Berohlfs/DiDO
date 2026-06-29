@@ -50,7 +50,19 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
   decisions: ADR-001 (expert_in originates on stakeholder not person — person is non-routed/inert; documented deviation)
   tests: n/a — gates (all 5 green, exit 0)
   NOTES FOR 510: frontmatter fields to stamp — engagement `client:`; deliverable/decision/risk/meeting `engagement:`; decision `requested_by:`/`approved_by:`; deliverable `requested_by:`; `depends_on:`; `blocked_by:`; stakeholder `expert_in:`; opportunity `renewal_for:`/`expansion_for:`. File stakeholders under `people/stakeholders/` OR stamp `type: stakeholder` (type frontmatter beats prefix; base `person` is a superset prefix). Edge-direction proof: file `engagements/<slug>` with `client: clients/<slug>`, then `gbrain graph engagements/<slug> --depth 1` shows `engagement --client_of--> client`; `gbrain backlinks clients/<slug>` lists the engagement. `gbrain schema review-orphans` errors (`relation "pages" does not exist`) in this pglite brain — experimental, NOT a gate; use `gbrain stats`.
-- BLU-510: TODO  (wave 2, opus, authoring, has-new-ui: false)
+- BLU-510: DONE  (wave 2, opus, authoring, has-new-ui: false)
+  gates (GBRAIN_HOME=$HOME/.gbrain-dido, source abstudios-seed): all 5 green.
+    1 enrich run → typed pages: client 1, engagement 1, meeting 5, decision 2, risk 1, opportunity 1, stakeholder 2, person 2, note +2 (cowork).
+    2 graph engagements/abstudios-sierra --depth 1 → engagement --client_of--> clients/abstudios (DIRECTION PROVEN) + --blocked_by--> risk.
+    3 backlinks clients/abstudios → engagement (client_of) + opportunity (expansion_for).
+    4 engagement frontmatter `status: open`; opportunity `status: open`.
+    5 cowork note lands as `note`, engagement link DEFERRED + queued in reports/enrich-open-questions.md.
+  KEY FINDING: gbrain 0.42.53.0 does NOT auto-materialize custom-pack frontmatter_links — extractFrontmatterLinks walks the hardcoded base FRONTMATTER_LINK_MAP (base verbs only); frontmatterLinkTypeFromPack is exported but never called. So dido verbs (client_of/owned_by/context_for/requested_by/approved_by/depends_on/blocked_by/expert_in/renewal_for/expansion_for) need explicit `gbrain link <from> <to> --link-type <verb>`. Frontmatter is still stamped as the declarative contract (509 input + forward-compat). `attended` IS a base verb → auto-links from meeting attendees:/body refs (confirmed). This corrects ADR-001's "edges materialize from frontmatter_links" premise; see ADR-002.
+  files: packs/dido-engagement/enrich/SKILL.md, packs/dido-engagement/enrich/filing-rules.md, docs/specs/dido-mvp-BLU-510-enrich-filing.md, docs/adr/ADR-002-enrich-filing-inference.md, reports/enrich-open-questions.md
+  reused: dido-engagement pack (508); gbrain put/link/graph/backlinks; base attended auto-link; ask-user pattern; _brain-filing-rules.md
+  decisions: ADR-002 (infer-first + ask-when-stuck, no numeric gate, rationale-note git-diff auditability, status:open = 509 contract, explicit-gbrain-link edge materialization, enrich-vs-512 dedupe)
+  NOTES FOR 509: read `status: open` from engagements/abstudios-sierra and opportunities/florida-district (both stamped). Enumerate engagements/opportunities then read frontmatter status (filter path still TBD per plan — query/search --types). client.status is 509's to derive.
+  NOTES FOR 511/512/513: typed slugs available to query on the validation brain — clients/abstudios, engagements/abstudios-sierra, meetings/2025-{03-12,04-02,07-14,08-08,10-03}-abstudios-sierra, decisions/2025-03-12-scheduling-separate-tab, decisions/2025-07-14-default-ai-model, risks/billing-cost-overrun, opportunities/florida-district, people/stakeholders/{scott-wayman,andrew-willett}, people/{ryan-ramirez,guilherme-garibaldi}. To materialize any new pack edge, stamp frontmatter AND `gbrain link` the verb (see packs/dido-engagement/enrich/filing-rules.md).
 - BLU-509: TODO  (wave 3, opus, authoring, has-new-ui: false)
 - BLU-511: TODO  (wave 4, opus, authoring, has-new-ui: false)
 - BLU-512: TODO  (wave 4, opus, authoring, has-new-ui: false)
