@@ -28,7 +28,7 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
 - headline facts: docs/mvp-execution-plan.md §1 (5 facts) — carried into the brief
 - proposal (templates): docs/consulting-brain-proposal.md (§7 ontology, §8 lifecycle, §10 decision template)
 - environment runbook: docs/plans/dido-mvp-environment.md
-- brief: docs/research/dido-mvp-brief.md  (pending — Phase 2)
+- brief: docs/research/dido-mvp-brief.md  (DONE — reuse shapes + 5 verified facts + confirmed CLI flags)
 - plan: docs/plans/dido-mvp-plan.md  (pending — Phase 3)
 - tracker: docs/plans/dido-mvp-tracker.md  (pending — Phase 3)
 
@@ -38,6 +38,7 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
 ## Phase log
 - P0 Kickoff: done → this baton; branch ryan/dido-mvp cut; 7 tickets imported from Linear
 - P1 Environment: done (pre-provisioned) → docs/plans/dido-mvp-environment.md (validation brain reachable + embedded, verified at kickoff)
+- P2 Brief: done → docs/research/dido-mvp-brief.md. Key corrections for builders: `gbrain_min_version` 3/4-part (0.42 fails, use 0.42.0); `primitive` is closed 5-enum; pack `frontmatter_links` `{page_type,fields,link_type}` has NO inverse and NO direction (edge always declaring→referenced, reverse via backlinks); doctor needs BOTH `routing-eval.jsonl` (≥5) AND `evals/*.judge.json` (≥3); `type:` frontmatter beats slug prefix; `sync --apply` defaults to DRY-RUN (must pass --apply); CyclePhase is a closed 22-member union → 509 must be a skill. Edge-direction checkpoint: `gbrain graph engagements/<slug> --depth 1` + `gbrain backlinks clients/<slug>`.
 
 ## Ticket log (mirrors the tracker, kept terse)
 - BLU-508: TODO  (wave 1, opus, authoring, has-new-ui: false)
