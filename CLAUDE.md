@@ -11,3 +11,9 @@ These are the main sources of context:
 - [GBrain docs - Company brain setup (multiplayer)](./gbrain/docs/tutorials/company-brain.md) 
 
 - [This project's docs - dynamic](./docs/)
+
+---
+
+## Compounded knowledge base
+
+[File system directory](/Users/berohlfs/Documents/GitHub/DiDO-knowledge-base)

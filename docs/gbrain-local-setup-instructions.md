@@ -39,8 +39,22 @@ gbrain doctor
 
 ## Sync with external knowledge repo
 
+- Generate SSH keypair (ssh-keygen)
+- Register it on `https://github.com/settings/keys`
+
+```
+# (host trust — not auth)
+ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts
+sort -u ~/.ssh/known_hosts -o ~/.ssh/known_hosts
+chmod 600 ~/.ssh/known_hosts
+
+# (the only thing that touched git)
+git -C ~/Documents/GitHub/DiDO-knowledge-base remote set-url origin git@github.com:Berohlfs/DiDO-knowledge-base.git
+```
+
 ```
 gbrain sources add shared --path "/Users/berohlfs/Documents/GitHub/DiDO-knowledge-base" --name "Sierra shared wiki"
+gbrain sources list
 gbrain sync --all
 gbrain embed --stale
 ```
@@ -90,3 +104,32 @@ gbrain auth register-client bernardo \
 - Open Advanced settings
 - Enter the OAuth Client ID and Client Secret
 - Add the connector, then click Connect to complete OAuth authorization.
+
+## CRONS
+
+- `gbrain dream`
+- `gbrain sync --all` and `gbrain embed --stale`
+
+## Dreaming
+
+- Enable enrichment
+
+```
+# Flesh out thin/stub pages from what the brain already knows (1 LLM call/page)
+gbrain config set cycle.enrich_thin.enabled true
+gbrain config set cycle.enrich_thin.max_pages_per_tick 3
+gbrain config set cycle.enrich_thin.max_cost_usd 0.50          # per-source cap
+gbrain config set cycle.enrich_thin.max_total_cost_usd 3       # brain-wide per cycle
+gbrain config set cycle.enrich_thin.workers 1                  # hard budget ceiling
+gbrain config set cycle.enrich_thin.model claude-haiku-4-5     # cheap model for enrichment
+
+# Extract facts from ingested conversations/transcripts
+gbrain config set cycle.conversation_facts_backfill.enabled true
+gbrain config set cycle.conversation_facts_backfill.max_total_cost_usd 3
+
+# Optimize brain-resident skills
+gbrain config set cycle.skillopt.enabled true
+gbrain config set cycle.skillopt.brain_wide_cap_usd 5
+```
+
+`gbrain dream --dir /Users/berohlfs/Documents/GitHub/DiDO-knowledge-base`
