@@ -1,8 +1,8 @@
 {
   "api_version": "gbrain-skillpack-v1",
   "name": "dido-consulting",
-  "version": "0.1.0",
-  "description": "Read-only account and engagement reporting skills for Sierra Studio's consulting brain: client brief, weekly account health, executive summary.",
+  "version": "0.2.0",
+  "description": "Account, engagement, meeting, risk, and decision skills for Sierra Studio's consulting brain: client brief, weekly account health, executive summary, meeting prep, risk review, decision log.",
   "author": "Sierra Studio <brain@sierra.studio>",
   "license": "MIT",
   "homepage": "https://github.com/Berohlfs/DiDO/tree/main/packs/dido-consulting",
@@ -11,7 +11,10 @@
   "skills": [
     "skills/client-brief",
     "skills/weekly-account-health",
-    "skills/executive-summary"
+    "skills/executive-summary",
+    "skills/meeting-prep",
+    "skills/risk-review",
+    "skills/decision-log"
   ],
   "runbooks": {
     "bootstrap": "runbooks/bootstrap.md"
@@ -29,6 +32,9 @@
   "routing_evals": [
     "skills/client-brief/routing-eval.jsonl",
     "skills/weekly-account-health/routing-eval.jsonl",
-    "skills/executive-summary/routing-eval.jsonl"
+    "skills/executive-summary/routing-eval.jsonl",
+    "skills/meeting-prep/routing-eval.jsonl",
+    "skills/risk-review/routing-eval.jsonl",
+    "skills/decision-log/routing-eval.jsonl"
   ]
 }

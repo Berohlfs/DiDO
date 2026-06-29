@@ -1,0 +1,6 @@
+{"intent":"meeting prep","expected_skill":"meeting-prep"}
+{"intent":"prep me for this meeting","expected_skill":"meeting-prep"}
+{"intent":"what do I need to know before this meeting","expected_skill":"meeting-prep"}
+{"intent":"prep for my client call with ABStudios","expected_skill":"meeting-prep"}
+{"intent":"prep me for this client before we talk","expected_skill":"meeting-prep"}
+{"intent":"get me ready for the upcoming ABStudios meeting","expected_skill":"meeting-prep"}

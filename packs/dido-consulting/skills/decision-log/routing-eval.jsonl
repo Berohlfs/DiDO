@@ -1,0 +1,6 @@
+{"intent":"log this decision","expected_skill":"decision-log"}
+{"intent":"record this decision in the brain","expected_skill":"decision-log"}
+{"intent":"decision log","expected_skill":"decision-log"}
+{"intent":"what did we decide about the default AI model","expected_skill":"decision-log"}
+{"intent":"why did we decide to use Gemini","expected_skill":"decision-log"}
+{"intent":"decision history for this engagement","expected_skill":"decision-log"}

@@ -1,0 +1,6 @@
+{"intent":"risk review","expected_skill":"risk-review"}
+{"intent":"what are the risks on this engagement","expected_skill":"risk-review"}
+{"intent":"review risks for ABStudios","expected_skill":"risk-review"}
+{"intent":"any risks I should know about on this account","expected_skill":"risk-review"}
+{"intent":"risk review for this client","expected_skill":"risk-review"}
+{"intent":"surface the open risks on the ABStudios engagement","expected_skill":"risk-review"}

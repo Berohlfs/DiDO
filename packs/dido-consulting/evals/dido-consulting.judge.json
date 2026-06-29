@@ -13,6 +13,18 @@
     {
       "name": "failure mode — ambiguous or unknown subject",
       "criteria": "When the requested client or engagement cannot be resolved to a page, the output says so and asks for disambiguation rather than guessing a client or summarizing the wrong one."
+    },
+    {
+      "name": "meeting-prep — grounded prep brief",
+      "criteria": "Output covers who's in the room (attendees with roles), where the engagement stands, open items to raise, last-meeting recap with action-item status, and suggested talking points. Every line cites a source slug, talking points cite the item they derive from, and when attendees are inferred from the last meeting (no calendar event) or action items are not recorded, that is gap-flagged rather than fabricated."
+    },
+    {
+      "name": "risk-review — recorded risks plus infer-first candidates",
+      "criteria": "Each recorded risk is reported with description, severity, status, owner, linked engagement, and latest update, gap-flagging any field the page does not carry (the seed risk has no severity/status/owner). Candidate new risks are proposed with rationale and a cited source meeting, are not silently created, and do not duplicate a risk already recorded (e.g. billing-cost-overrun)."
+    },
+    {
+      "name": "decision-log capture — write-then-link, dedupe vs enrich",
+      "criteria": "Capture records what was decided, rationale, alternatives, and outcome (TBD) cited to a meeting/session, then materializes the decision's edges (owned_by, and requested_by/approved_by when known) explicitly with gbrain link since frontmatter does not auto-materialize. When a decision for the same engagement + title/date already exists (enrich-filed), the existing page is updated, not duplicated."
     }
   ]
 }
