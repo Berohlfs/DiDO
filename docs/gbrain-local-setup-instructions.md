@@ -27,14 +27,36 @@ gbrain --version    # should print 0.42.53.0 — proof it's your fork, not upstr
 which gbrain        # should resolve to ~/.bun/bin/gbrain → this repo
 ```
 
-## Init GBrain with API keys and Supabase
+## API keys — make them persistent (do this once)
+
+gbrain reads `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` from the shell environment **or** from `config.json`. Exporting them in a one-off shell does not persist — it's gone when the shell closes (the usual "I thought I set this up" trap). Put them in `~/.zshrc` so every shell and **both** brains (shared Supabase + local pglite) inherit them:
 
 ```
-export OPENAI_API_KEY="sk-proj-your-key-here"
-export ANTHROPIC_API_KEY="sk-proj-your-key-here"
+echo 'export OPENAI_API_KEY="sk-proj-..."'   >> ~/.zshrc
+echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Per-brain alternative (writes to `config.json`, which is `chmod 600`): `gbrain config set openai_api_key "..."` and `gbrain config set anthropic_api_key "..."`. Run once per brain (prefix with `GBRAIN_HOME="$HOME/.gbrain-dido"` for the local one).
+
+## Init GBrain with Supabase (shared brain)
+
+The Supabase pooler connection string (`DATABASE_POOLING_URL`) lives in `~/.gbrain/config.json` as `database_url` — it is **not** an env var. Set it at init, or later with `gbrain config set database_url "..."`.
+
+```
 gbrain init --supabase
 [[PASTE THE SUPABASE CONNECTION STRING]]
 gbrain doctor
+```
+
+## Local validation brain (isolated, for MVP gate-testing)
+
+A separate local `pglite` brain for running BLU-508–513 validation gates without touching the shared Supabase. Selected by `GBRAIN_HOME`. Full runbook + seed steps: `docs/plans/dido-mvp-environment.md`.
+
+```
+export GBRAIN_HOME="$HOME/.gbrain-dido"   # every command for the local brain needs this
+gbrain stats                               # 7 seed pages (ABStudios slice)
+gbrain embed --stale                       # embed the seed (needs OPENAI_API_KEY)
 ```
 
 ## Sync with external knowledge repo
