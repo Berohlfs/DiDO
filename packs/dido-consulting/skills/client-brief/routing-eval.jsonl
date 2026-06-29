@@ -1,0 +1,6 @@
+{"intent":"client brief","expected_skill":"client-brief"}
+{"intent":"brief me on ABStudios","expected_skill":"client-brief"}
+{"intent":"what's the state of ABStudios","expected_skill":"client-brief"}
+{"intent":"catch me up on the ABStudios account","expected_skill":"client-brief"}
+{"intent":"where are we with ABStudios right now","expected_skill":"client-brief"}
+{"intent":"give me a one-pager on this client","expected_skill":"client-brief"}

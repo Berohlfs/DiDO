@@ -1,0 +1,6 @@
+{"intent":"account health","expected_skill":"weekly-account-health"}
+{"intent":"weekly account health","expected_skill":"weekly-account-health"}
+{"intent":"how are our accounts doing","expected_skill":"weekly-account-health"}
+{"intent":"run the account health digest","expected_skill":"weekly-account-health"}
+{"intent":"generate this week's account health report","expected_skill":"weekly-account-health"}
+{"intent":"which accounts need attention this week","expected_skill":"weekly-account-health"}

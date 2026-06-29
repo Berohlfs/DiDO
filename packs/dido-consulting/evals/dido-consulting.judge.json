@@ -1,0 +1,18 @@
+{
+  "task": "Score a dido-consulting skill's output for an account/status request. A good answer is grounded only in pages the brain holds, cites the source slug on every claim, and explicitly gap-flags any section with no data instead of inventing it.",
+  "output": "{{output-from-skill}}",
+  "cases": [
+    {
+      "name": "happy path — client brief on a seeded client",
+      "criteria": "Output is a one-page brief covering lifecycle status, active engagements with latest movement, key stakeholders, open risks, and recent decisions. Every line cites a source slug (clients/, engagements/, decisions/, risks/, people/, meetings/). Nothing appears that is not in a cited page."
+    },
+    {
+      "name": "edge case — a section has no data",
+      "criteria": "When the brain holds nothing for a section (e.g. no scheduled next touchpoint, no recorded risk severity, no open questions), the output writes an explicit gap flag for that section and does NOT fabricate a value."
+    },
+    {
+      "name": "failure mode — ambiguous or unknown subject",
+      "criteria": "When the requested client or engagement cannot be resolved to a page, the output says so and asks for disambiguation rather than guessing a client or summarizing the wrong one."
+    }
+  ]
+}

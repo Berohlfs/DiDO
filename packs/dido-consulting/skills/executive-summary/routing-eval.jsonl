@@ -1,0 +1,6 @@
+{"intent":"executive summary","expected_skill":"executive-summary"}
+{"intent":"exec summary of the ABStudios engagement","expected_skill":"executive-summary"}
+{"intent":"summarize the ABStudios platform build for leadership","expected_skill":"executive-summary"}
+{"intent":"leadership summary of this engagement","expected_skill":"executive-summary"}
+{"intent":"give the exec team a brief on this engagement","expected_skill":"executive-summary"}
+{"intent":"executive summary of ABStudios / Sierra","expected_skill":"executive-summary"}
