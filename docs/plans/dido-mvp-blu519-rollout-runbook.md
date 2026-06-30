@@ -54,12 +54,19 @@ gbrain skillpack doctor packs/dido-consulting --quick   # expect 10/10
 ```
 
 ## Rollback
+NOTE: `gbrain schema use gbrain-base-v2` is NOT reliable — `gbrain-base-v2` is the prod active pack via home-config but is NOT a name-resolvable pack on this install (`schema list` shows only gbrain-base + gbrain-recommended; `schema show gbrain-base-v2` → "Unknown pack"). Its source lives in the fork at `gbrain/src/core/schema-pack/base/gbrain-base-v2.yaml` but the installed CLI does not expose it to `use`/`show`/`extends`.
+Use one of these instead, in order of preference:
 ```sh
 unset GBRAIN_HOME
-gbrain schema use gbrain-base-v2        # restore the previous active pack (or: gbrain schema downgrade)
-gbrain schema active                    # confirm gbrain-base-v2 restored
-# If sync --apply had retyped pages, restore them from the export:
-gbrain export --restore-only --repo "$HOME/gbrain-prod-backup-2026-06-29"
+gbrain schema downgrade                  # restores the PREVIOUS active pack (the intended rollback)
+gbrain schema active                     # confirm gbrain-base-v2 restored
+
+# Fallback if downgrade can't resolve it: restore the config string directly.
+# The resolver loaded "gbrain-base-v2" from config before the flip, so re-writing it reverts the lens.
+#   edit ~/.gbrain/config.json: "schema_pack": "dido-engagement" -> "gbrain-base-v2"
+
+# Data rollback is almost certainly unnecessary: sync --apply retyped 0 pages.
+# Only if pages were ever retyped: gbrain export --restore-only --repo "$HOME/gbrain-prod-backup-2026-06-29"
 ```
 To fully un-install the local pack: `rm -rf ~/.gbrain/schema-packs/dido-engagement`.
 
