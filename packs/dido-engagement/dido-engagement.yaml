@@ -1,0 +1,168 @@
+api_version: gbrain-schema-pack-v1
+name: dido-engagement
+version: 1.0.0
+description: Makes the client engagement the primary object of Sierra's company brain.
+gbrain_min_version: 0.42.0
+extends: gbrain-base
+borrow_from: []
+
+# stakeholder is declared before person's people/ prefix would match: a page at
+# people/stakeholders/* must resolve to stakeholder, not the inherited person
+# (first-match-wins on path_prefixes). See ADR-001.
+page_types:
+  - name: stakeholder
+    primitive: entity
+    path_prefixes: [people/stakeholders/]
+    aliases: []
+    extractable: true
+    expert_routing: true
+
+  - name: client
+    primitive: entity
+    path_prefixes: [clients/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: engagement
+    primitive: entity
+    path_prefixes: [engagements/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: deliverable
+    primitive: annotation
+    path_prefixes: [deliverables/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: decision
+    primitive: temporal
+    path_prefixes: [decisions/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: risk
+    primitive: temporal
+    path_prefixes: [risks/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: opportunity
+    primitive: temporal
+    path_prefixes: [opportunities/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+  - name: expertise
+    primitive: concept
+    path_prefixes: [expertise/]
+    aliases: []
+    extractable: false
+    expert_routing: true
+
+  - name: asset
+    primitive: concept
+    path_prefixes: [assets/]
+    aliases: []
+    extractable: false
+    expert_routing: false
+
+  # Redeclared from gbrain-base (not merely inherited): lint validates
+  # frontmatter_links.page_type against THIS manifest only (loadPackFromFile,
+  # not the extends-merged set), so context_for's `meeting` reference must
+  # resolve locally. Matches the base meeting type. See ADR-001.
+  - name: meeting
+    primitive: temporal
+    path_prefixes: [meetings/]
+    aliases: []
+    extractable: true
+    expert_routing: false
+
+# Verbs carry no inverse: each edge materializes declaring-page -> referenced-page,
+# and the reverse reading (e.g. an engagement's "owns" view of its deliverables)
+# is a backlink traversal, never a second declared verb. See ADR-001.
+# No inference block: every verb here fires from frontmatter_links (deterministic,
+# zero-LLM). similar_to is declarative-only -- it has no frontmatter_links wiring,
+# so it never auto-fires and must be written explicitly (gbrain link).
+link_types:
+  - name: client_of
+  - name: owned_by
+  - name: context_for
+  - name: requested_by
+  - name: approved_by
+  - name: depends_on
+  - name: blocked_by
+  - name: expert_in
+  - name: renewal_for
+  - name: expansion_for
+  - name: similar_to
+
+# Each entry's page_type is the DECLARING page's type; the verb materializes an
+# edge to the slug named in the field value. Multi-source verbs (owned_by,
+# depends_on, blocked_by) need one entry per declaring type.
+frontmatter_links:
+  - page_type: engagement
+    fields: [client]
+    link_type: client_of
+
+  - page_type: deliverable
+    fields: [engagement]
+    link_type: owned_by
+  - page_type: decision
+    fields: [engagement]
+    link_type: owned_by
+  - page_type: risk
+    fields: [engagement]
+    link_type: owned_by
+
+  - page_type: meeting
+    fields: [engagement]
+    link_type: context_for
+
+  - page_type: decision
+    fields: [requested_by]
+    link_type: requested_by
+  - page_type: deliverable
+    fields: [requested_by]
+    link_type: requested_by
+
+  - page_type: decision
+    fields: [approved_by]
+    link_type: approved_by
+
+  - page_type: deliverable
+    fields: [depends_on]
+    link_type: depends_on
+  - page_type: decision
+    fields: [depends_on]
+    link_type: depends_on
+
+  - page_type: engagement
+    fields: [blocked_by]
+    link_type: blocked_by
+  - page_type: deliverable
+    fields: [blocked_by]
+    link_type: blocked_by
+  - page_type: decision
+    fields: [blocked_by]
+    link_type: blocked_by
+
+  # Experts are stakeholders: expert_routing is scoped to stakeholder + expertise
+  # and whoknows/find_experts filters to expert_routing types, so the expert_in
+  # edge originates on stakeholder (not the inherited, non-routed person). ADR-001.
+  - page_type: stakeholder
+    fields: [expert_in]
+    link_type: expert_in
+
+  - page_type: opportunity
+    fields: [renewal_for]
+    link_type: renewal_for
+  - page_type: opportunity
+    fields: [expansion_for]
+    link_type: expansion_for
