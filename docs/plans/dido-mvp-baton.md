@@ -91,7 +91,11 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
   decisions: none — covered by ADR-001 (expert_routing scope) + ADR-004 (skillpack read-path)
   finalSeedState: unchanged — 24 pages, read-only skills wrote nothing.
   NOTE FOR 519: read skills point at materialized backlinks + whoknows; they light up further once the shared brain carries real deliverable/expertise/opportunity pages.
-- BLU-519: TODO  (wave 5, opus, authoring, has-new-ui: false) — targets SHARED brain, no GBRAIN_HOME
+- BLU-519: IN_PROGRESS  (wave 5, opus, authoring, has-new-ui: false) — targets SHARED brain, no GBRAIN_HOME. Safe-prep complete and GREEN; STOPPED before the flip pending explicit human go-ahead (user chose safe-prep+diagnose option 2026-06-29).
+  SHARED BRAIN REALITY (verified read-only): 822 pages / 14684 chunks, active pack gbrain-base-v2, content is Acme/Snackably DEMO data (NOT ryan-data; "ABStudios" search returns nothing). Real shared state, not a disposable mirror.
+  DONE so far: backup export → ~/gbrain-prod-backup-2026-06-29 (running, ~20%+); recorded prev active pack = gbrain-base-v2; installed pack non-activating at ~/.gbrain/schema-packs/dido-engagement/pack.yaml (active pack unchanged — confirmed); `schema validate dido-engagement` → exit 0 (10 types/11 verbs); `schema lint dido-engagement --with-db` → exit 0, WARNINGS-ONLY (7 extractable_empty_corpus: dido prefixes match 0 current pages — expected; base gbrain-base vs prod gbrain-base-v2 produced NO error → structurally compatible).
+  NOT YET RUN (needs go-ahead): `schema use dido-engagement` (local config flip, reversible) + `schema sync --apply` (shared DB backfill — would retype ~0 pages today since dido prefixes match 0). Full runbook + rollback: docs/plans/dido-mvp-blu519-rollout-runbook.md.
+  FOLLOW-UP: pack extends gbrain-base while prod runs gbrain-base-v2 — lint clean today, but consider re-basing on gbrain-base-v2 before team reliance.
 
 ## Open questions / escalations
 - (none)
