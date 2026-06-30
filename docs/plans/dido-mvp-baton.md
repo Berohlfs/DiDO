@@ -43,7 +43,8 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
 
 ## Phase log (execution)
 - P4 Execution: done → all 7 tickets DONE on branch ryan/dido-mvp (508→510→509→511→512→513→519), one commit each.
-- P5 PR doc: done → docs/reviews/dido-mvp-pr-review.md (47 files, 2899 lines added). Next = P6 manual review + open ONE PR (human step).
+- P5 PR doc: done → docs/reviews/dido-mvp-pr-review.md (47 files, 2899 lines added).
+- P6 PR: done → https://github.com/Berohlfs/DiDO/pull/5 (branch ryan/dido-mvp → main). Follow-ups filed: BLU-520 (frontmatter_links auto-materialize, before BLU-516), BLU-521 (re-base on gbrain-base-v2). BLU-519 rollback note corrected (downgrade/config-restore). Milestone complete.
 
 ## Ticket log (mirrors the tracker, kept terse)
 - BLU-508: DONE  (wave 1, opus, authoring, has-new-ui: false)
