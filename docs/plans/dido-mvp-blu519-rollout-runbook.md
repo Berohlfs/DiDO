@@ -1,7 +1,6 @@
 # BLU-519 — Shared-brain rollout runbook (rollback included)
 
-> **Status:** SAFE-PREP COMPLETE, STOPPED before the flip (per user decision 2026-06-29).
-> The reversible diagnostics ran green; the two mutating steps (`schema use`, `schema sync --apply`) are NOT yet run and need an explicit human go-ahead.
+> **Status:** COMPLETE — flip executed 2026-06-29 with explicit user go-ahead. `dido-engagement` is the active pack on the shared brain; `dido-consulting` doctor 10/10; zero pages retyped, zero data loss. Rollback path below is verified-by-inspection and ready if needed.
 > **Target:** the SHARED production brain (default `~/.gbrain`, Supabase sa-east-1). No `GBRAIN_HOME`. Every command here mutates or reads shared state.
 
 ## What the shared brain actually contains (verified read-only, 2026-06-29)
@@ -22,7 +21,16 @@
 - `gbrain schema use dido-engagement` writes **local** `~/.gbrain/config.json` (`schema_pack`). It changes the active pack for THIS machine's view of the shared brain; it does not edit teammates' local configs. Reversible with `gbrain schema use gbrain-base-v2` (or `schema downgrade`).
 - `gbrain schema sync --apply` mutates the **shared DB** `page.type` column across matching pages — this is the team-visible, irreversible-feeling change. Backed by the export above. Because the dido prefixes match 0 current pages, a backfill today would retype **0 pages** (the lint corpus check proves this), so the immediate effect on the existing Acme/Snackably corpus is null until consulting data is filed under the dido prefixes. Confirm with a dry-run first.
 
-## Remaining steps — NOT YET RUN (need explicit go-ahead)
+## Flip — DONE (2026-06-29), all green
+- `gbrain schema use dido-engagement` → active pack = `dido-engagement v1.0.0` (wrote `~/.gbrain/config.json`).
+- `gbrain schema sync` (dry-run) → `would_apply=0` for all 10 types (dido prefixes match 0 existing pages).
+- `gbrain schema sync --apply` → `applied=0` (no-op, as predicted — existing corpus untouched).
+- `gbrain schema review-orphans` → **0 orphans** (all 822 pages still resolve under the active pack, since dido-engagement extends gbrain-base's company/person/concept/source/note types).
+- `gbrain whoknows "ai model selection"` → `[]` (expected: no `stakeholder`/`expertise` pages in the demo corpus; Expertise Mapper gap-flags this).
+- `gbrain skillpack doctor packs/dido-consulting --quick` → ★ 10/10 [endorsed].
+- `gbrain stats` → Pages 822 / Chunks 14684 (unchanged — zero data loss).
+
+## Reference: the steps as run (kept for re-run / audit)
 ```sh
 source ~/.zshrc
 unset GBRAIN_HOME                      # target the SHARED brain on purpose

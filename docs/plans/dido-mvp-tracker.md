@@ -10,4 +10,4 @@ Posture: authoring (all). has-new-ui: false (all). model: opus (all).
 | BLU-511 | MVP skills: account + status (scaffolds pack) | 4 | 508, 510 | authoring | yes | DONE |
 | BLU-512 | MVP skills: meeting/risk/decision capture | 4 | 508, 510 | authoring | no | DONE |
 | BLU-513 | MVP skills: growth + reuse | 4 | 508, 510 | authoring | no | DONE |
-| BLU-519 | Activate on SHARED production brain (no GBRAIN_HOME) | 5 | 508, 509, 510, 511, 512, 513 | authoring | no | IN_PROGRESS (safe-prep green; STOPPED before flip, awaiting go-ahead) |
+| BLU-519 | Activate on SHARED production brain (no GBRAIN_HOME) | 5 | 508, 509, 510, 511, 512, 513 | authoring | no | DONE |
