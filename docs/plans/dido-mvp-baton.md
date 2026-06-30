@@ -41,6 +41,10 @@ Prove the loop end-to-end before authoring breadth: 508 (ontology) → 510 files
 - P3 Plan: done → docs/plans/dido-mvp-plan.md + tracker. Complex (thin spec): BLU-510, BLU-511. 509 build-time TODO: confirm exact filter-by-frontmatter path (`gbrain query` vs `search --types`).
 - P2 Brief: done → docs/research/dido-mvp-brief.md. Key corrections for builders: `gbrain_min_version` 3/4-part (0.42 fails, use 0.42.0); `primitive` is closed 5-enum; pack `frontmatter_links` `{page_type,fields,link_type}` has NO inverse and NO direction (edge always declaring→referenced, reverse via backlinks); doctor needs BOTH `routing-eval.jsonl` (≥5) AND `evals/*.judge.json` (≥3); `type:` frontmatter beats slug prefix; `sync --apply` defaults to DRY-RUN (must pass --apply); CyclePhase is a closed 22-member union → 509 must be a skill. Edge-direction checkpoint: `gbrain graph engagements/<slug> --depth 1` + `gbrain backlinks clients/<slug>`.
 
+## Phase log (execution)
+- P4 Execution: done → all 7 tickets DONE on branch ryan/dido-mvp (508→510→509→511→512→513→519), one commit each.
+- P5 PR doc: done → docs/reviews/dido-mvp-pr-review.md (47 files, 2899 lines added). Next = P6 manual review + open ONE PR (human step).
+
 ## Ticket log (mirrors the tracker, kept terse)
 - BLU-508: DONE  (wave 1, opus, authoring, has-new-ui: false)
   gates: validate→green, lint --with-db→green, use→active, sync --apply→green (would_apply=0, prefixes dead until 510 enriches — expected), explain→green
